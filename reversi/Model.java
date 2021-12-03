@@ -2,6 +2,7 @@ package reversi;
 
 import java.awt.Dimension;
 import java.awt.Toolkit;
+
 import javax.swing.JFrame;
 
 public class Model {
@@ -10,15 +11,14 @@ public class Model {
 
     private Judge judge;
 
-    public Model(Judge aJudge){
+    public Model(Judge aJudge) {
         judge = aJudge;
         return;
     }
 
-    public void open(String aString){
+    public void open(String aString) {
         view = new View(this);
         controller = new Controller(this);
-        view.controller = this.controller;
         JFrame aWindow = new JFrame(aString);
         aWindow.add(view);
         Dimension aDimension = new Dimension(800, 600);
@@ -35,7 +35,20 @@ public class Model {
         aWindow.toFront();
     }
 
-    public Board getBoard(){
+    public void setPiece(Integer aColumn, Integer aRow) {
+        Player aPlayer = judge.getPlayer();
+        aPlayer.setPiece(aColumn, aRow);
+        judge.changePlayer();
+        view.updata();
+        return;
+    }
+
+    public Board getBoard() {
         return judge.getBoard();
     }
+
+    public Boolean getSet() {
+        return judge.getSet();
+    }
+
 }

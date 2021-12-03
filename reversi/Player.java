@@ -4,13 +4,12 @@ public class Player extends Object{
     private Board board;
     private Piece piece;
     private String name;
-    private Integer count;
+    private static Integer number = 1;
 
-    public Player(Board aBoard,Integer aNumber,String aName){
+    public Player(Board aBoard,String aName){
         board = aBoard;
-        piece = new Piece(aNumber);
+        piece = new Piece(number++);
         name = aName;
-        count = 0;
     }
 
     public Integer getColor(){

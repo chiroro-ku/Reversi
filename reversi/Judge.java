@@ -1,14 +1,18 @@
 package reversi;
 
+import java.util.List;
+
 public class Judge extends Object {
     private Board board;
-    private Player playerA;
-    private Player playerB;
+    private List<Player> players;
+    private Boolean playerSet;
+    private Integer count;
 
-    public Judge(Board aBoard, Player aPlayerA, Player aPlayerB) {
+    public Judge(Board aBoard, List<Player> player) {
         board = aBoard;
-        playerA = aPlayerA;
-        playerB = aPlayerB;
+        players = player;
+        playerSet = false;
+        count = 0;
         this.initialize();
         return;
     }
@@ -20,15 +24,31 @@ public class Judge extends Object {
         Integer aRow = aMaxRow / 2;
 
         board.reset();
-        playerA.setPiece(aColumn, aRow);
-        playerA.setPiece(aColumn - 1, aRow - 1);
-        playerB.setPiece(aColumn - 1, aRow);
-        playerB.setPiece(aColumn, aRow - 1);
+        players.get(0).setPiece(aColumn, aRow);
+        players.get(0).setPiece(aColumn - 1, aRow - 1);
+        players.get(1).setPiece(aColumn - 1, aRow);
+        players.get(1).setPiece(aColumn, aRow - 1);
+        playerSet = true;
 
         return;
     }
 
-    public Board getBoard(){
+    public void changePlayer() {
+        count++;
+        if (count == players.size())
+            count = 0;
+        return;
+    }
+
+    public Board getBoard() {
         return board;
+    }
+
+    public Boolean getSet() {
+        return playerSet;
+    }
+
+    public Player getPlayer() {
+        return players.get(count);
     }
 }
