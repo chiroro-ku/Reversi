@@ -3,52 +3,56 @@ package reversi;
 import java.util.List;
 
 public class Judge extends Object {
-    private Board board;
+    private Table table;
     private List<Player> players;
     private Boolean playerSet;
-    private Integer count;
+    private Integer index;
 
-    public Judge(Board aBoard, List<Player> player) {
-        board = aBoard;
+    public Judge(Table aTable, List<Player> player) {
+        table = aTable;
         players = player;
         playerSet = false;
-        count = 0;
+        index = 0;
         this.initialize();
         return;
     }
 
     public void initialize() {
-        Integer aMaxColumn = board.getMaxColumn();
-        Integer aMaxRow = board.getMaxRow();
+        Integer aMaxColumn = table.getMaxColumn();
+        Integer aMaxRow = table.getMaxRow();
         Integer aColumn = aMaxColumn / 2;
         Integer aRow = aMaxRow / 2;
 
-        board.reset();
-        players.get(0).setPiece(aColumn, aRow);
-        players.get(0).setPiece(aColumn - 1, aRow - 1);
-        players.get(1).setPiece(aColumn - 1, aRow);
-        players.get(1).setPiece(aColumn, aRow - 1);
+        table.initialize();
+        players.get(0).set(aColumn, aRow);
+        players.get(0).set(aColumn - 1, aRow - 1);
+        players.get(1).set(aColumn - 1, aRow);
+        players.get(1).set(aColumn, aRow - 1);
         playerSet = true;
 
         return;
     }
 
-    public void changePlayer() {
-        count++;
-        if (count == players.size())
-            count = 0;
+    public void setAction(Integer aColumn, Integer aRow) {
+        Player aPlayer = players.get(index);
+        if (table.isSet(aPlayer, aColumn, aRow)) {
+            aPlayer.set(aColumn, aRow);
+            this.addIndex();
+        }
         return;
     }
 
-    public Board getBoard() {
-        return board;
+    public Table getBoard() {
+        return table;
     }
 
     public Boolean getSet() {
         return playerSet;
     }
 
-    public Player getPlayer() {
-        return players.get(count);
+    public void addIndex(){
+        index++;
+        if (index == players.size())
+            index = 0;
     }
 }

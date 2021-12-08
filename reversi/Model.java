@@ -35,15 +35,13 @@ public class Model {
         aWindow.toFront();
     }
 
-    public void setPiece(Integer aColumn, Integer aRow) {
-        Player aPlayer = judge.getPlayer();
-        aPlayer.setPiece(aColumn, aRow);
-        judge.changePlayer();
+    public void set(Integer aColumn, Integer aRow) {
+        judge.setAction(aColumn,aRow);
         view.updata();
         return;
     }
 
-    public Board getBoard() {
+    public Table getBoard() {
         return judge.getBoard();
     }
 
