@@ -30,15 +30,15 @@ public class View extends JPanel {
             boardWidth = height;
         else
             boardWidth = width;
-        Board aBoard = model.getBoard();
+        Table aBoard = model.getBoard();
         List<Grid> grids = aBoard.getGrids();
-        Integer aMaxColumn = aBoard.getMaxColumn();
-        Integer aMaxRow = aBoard.getMaxRow();
-        Integer gridWidth = boardWidth / aMaxColumn;
+        Integer maxColumn = aBoard.getMaxColumn();
+        Integer maxRow = aBoard.getMaxRow();
+        Integer gridWidth = boardWidth / maxColumn;
         grids.forEach((v) -> {
             Integer index = grids.indexOf(v);
-            Integer aColumn = index / aMaxColumn;
-            Integer aRow = index - (aColumn * aMaxColumn);
+            Integer aColumn = index / maxColumn;
+            Integer aRow = index - (aColumn * maxColumn);
             Integer x = aRow * gridWidth;
             Integer y = aColumn * gridWidth;
             aGraphics.setColor(Color.GREEN);

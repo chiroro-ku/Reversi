@@ -3,47 +3,72 @@ package reversi;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Grid extends Object{
+import javax.swing.Painter;
+
+public class Grid extends Object {
     private Piece piece;
-    private Boolean setPiecePossible;
-    private Boolean pieceColorConfilm;
+    private Boolean endGrid;
+    private Integer index;
     private List<Grid> nextGrids;
+    private Integer column;
+    private Integer row;
 
-    public Grid(){
-        piece = new Piece(0);
-        setPiecePossible = true;
-        pieceColorConfilm = false;
+    public Grid(Integer aInteger) {
+        if(aInteger == -1) piece = new Piece(-1);
+        else piece = new Piece(0);
+        endGrid = false;
+        index = aInteger;
         nextGrids = new ArrayList<>();
         return;
     }
 
-    public Grid(Integer aNumber){
-        piece = new Piece(aNumber);
-        setPiecePossible = false;
-        pieceColorConfilm = false;
-        nextGrids = new ArrayList<>();
+    public void initialize(Integer maxColumn) {
+        row = index / maxColumn;
+        column = index - (row * maxColumn);
         return;
     }
 
-    public Piece getPiece(){
-        return piece;
+    public void setNextGrids(List<Grid> aSetNextGrids) {
+        nextGrids = aSetNextGrids;
+        return;
     }
 
-    public Integer getColor(){
-        return piece.getColor();
-    }
-
-    public void setPiece(Piece aPiece){
+    public void setPiece(Piece aPiece) {
         piece = aPiece;
         return;
     }
 
-    public void setSetPossible(Boolean aBoolean){
-        setPiecePossible = aBoolean;
+    public void setEndGrid() {
+        endGrid = true;
         return;
     }
 
-    public void setNextGrids(Grid aGrid,Integer index){
-        nextGrids.add(index,aGrid);
+    public Boolean isEndGrid() {
+        return endGrid;
     }
+
+    public Piece getPiece() {
+        return piece;
+    }
+
+    public Integer getColor() {
+        return piece.getColor();
+    }
+
+    public Integer getColumn() {
+        return column;
+    }
+
+    public Integer getRow() {
+        return row;
+    }
+
+    public List<Grid> getNextGrids(){
+        return nextGrids;
+    }
+
+    public Grid getNextGrid(Integer index){
+        return nextGrids.get(index);
+    }
+
 }

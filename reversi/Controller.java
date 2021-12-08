@@ -24,13 +24,13 @@ public class Controller extends MouseInputAdapter {
         Point aPoint = aMouseEvent.getPoint();
         int x = (int) aPoint.getX();
         int y = (int) aPoint.getY();
-        Board aBoard = model.getBoard();
+        Table aBoard = model.getBoard();
         Integer aBoardWidth = view.getBoardWidth();
         Integer aMaxColumn = aBoard.getMaxColumn();
         Integer aGridWidth = aBoardWidth / aMaxColumn;
         Integer aColumn = x / aGridWidth;
         Integer aRow = y / aGridWidth;
-        model.setPiece(aColumn, aRow);
+        model.set(aColumn, aRow);
         return;
     }
 }
