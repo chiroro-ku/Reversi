@@ -35,25 +35,30 @@ public class View extends JPanel {
         Integer maxColumn = aBoard.getMaxColumn();
         Integer maxRow = aBoard.getMaxRow();
         Integer gridWidth = boardWidth / maxColumn;
-        grids.forEach((v) -> {
-            Integer index = grids.indexOf(v);
-            Integer aColumn = index / maxColumn;
-            Integer aRow = index - (aColumn * maxColumn);
+        piece(aGraphics, model.getJudge().getPlayer().getColor(), maxColumn * gridWidth, (maxRow-1)*gridWidth, gridWidth);
+        grids.forEach(item -> {
+            Integer aColumn = item.getColumn();
+            Integer aRow = item.getRow();
             Integer x = aRow * gridWidth;
             Integer y = aColumn * gridWidth;
             aGraphics.setColor(Color.GREEN);
             aGraphics.fillRect(x, y, gridWidth, gridWidth);
             aGraphics.setColor(Color.BLACK);
             aGraphics.drawRect(x, y, gridWidth, gridWidth);
-            Grid aGrid = (Grid)v;
-            if(aGrid.getColor() == 1){
-                aGraphics.setColor(Color.BLACK);
-                aGraphics.fillOval(x, y, gridWidth, gridWidth);
-            }else if(aGrid.getColor() == 2){
-                aGraphics.setColor(Color.WHITE);
-                aGraphics.fillOval(x, y, gridWidth, gridWidth);
-            }
+            piece(aGraphics, item.getColor(), x, y, gridWidth);
         });
+        return;
+    }
+
+    public void piece(Graphics aGraphics, Integer aColor,Integer x, Integer y,Integer width){
+        if(aColor == 1){
+            aGraphics.setColor(Color.BLACK);
+            aGraphics.fillOval(x, y, width, width);
+        }else if(aColor == 2){
+            aGraphics.setColor(Color.WHITE);
+            aGraphics.fillOval(x, y, width, width);
+        }
+        return;
     }
 
     public Integer getBoardWidth(){

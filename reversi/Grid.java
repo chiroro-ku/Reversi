@@ -3,22 +3,28 @@ package reversi;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.Painter;
-
 public class Grid extends Object {
     private Piece piece;
     private Boolean endGrid;
     private Integer index;
+    private Boolean set;
     private List<Grid> nextGrids;
     private Integer column;
     private Integer row;
 
-    public Grid(Integer aInteger) {
-        if(aInteger == -1) piece = new Piece(-1);
-        else piece = new Piece(0);
+    public Grid(Piece aPiece,Integer aInteger) {
+        piece = aPiece;
+        aPiece.increment();
         endGrid = false;
         index = aInteger;
+        set = true;
         nextGrids = new ArrayList<>();
+        return;
+    }
+
+    public Grid(Piece aPiece) {
+        piece = aPiece;
+        set = false;
         return;
     }
 
@@ -34,7 +40,10 @@ public class Grid extends Object {
     }
 
     public void setPiece(Piece aPiece) {
+        piece.decrement();
         piece = aPiece;
+        piece.increment();
+        set = false;
         return;
     }
 
@@ -45,6 +54,10 @@ public class Grid extends Object {
 
     public Boolean isEndGrid() {
         return endGrid;
+    }
+
+    public Boolean isSet(){
+        return set;
     }
 
     public Piece getPiece() {
@@ -71,4 +84,7 @@ public class Grid extends Object {
         return nextGrids.get(index);
     }
 
+    public Integer getNextGridIndex(Grid aGrid){
+        return nextGrids.indexOf(aGrid);
+    }
 }

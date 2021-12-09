@@ -8,6 +8,8 @@ import java.util.stream.IntStream;
 public class Table extends Object {
     private Integer maxColumn;
     private Integer maxRow;
+    private Grid wall;
+    private Piece empty;
     private List<Grid> grids;
     private List<Integer> direction;
 
@@ -21,8 +23,10 @@ public class Table extends Object {
     }
 
     public void initialize() {
+        wall = new Grid(new Piece(-1));
+        empty = new Piece(0);
         grids = new ArrayList<>();
-        IntStream.range(0, maxColumn * maxRow).forEach(i -> grids.add(new Grid(i)));
+        IntStream.range(0, maxColumn * maxRow).forEach(i -> grids.add(new Grid(empty,i)));
         grids.forEach(item -> {
             item.initialize(maxColumn);
             item.setNextGrids(nextGridList(item));
@@ -35,7 +39,7 @@ public class Table extends Object {
         Integer index = grids.indexOf(aGrid);
         direction.forEach(item -> {
             if (isEndGrid(aGrid, item))
-                aList.add(new Grid(-1));
+                aList.add(wall);
             else
                 aList.add(grids.get(index + item));
         });
@@ -61,6 +65,7 @@ public class Table extends Object {
     public Boolean isSet(Player aPlayer, Integer aColumn, Integer aRow) {
         Integer aColor = aPlayer.getColor();
         Grid aGrid = this.getGrid(aColumn, aRow);
+        if(!aGrid.isSet()) return false;
         Integer index = 0;
         for (Grid aNextGrid : aGrid.getNextGrids()) {
             Integer aGridColor = aNextGrid.getColor();
@@ -78,8 +83,7 @@ public class Table extends Object {
             return false;
         if (aGridColor == aColor)
             return true;
-        else
-            return isSetNextGrids(aColor, aGrid.getNextGrid(index), index);
+        return isSetNextGrids(aColor, aGrid.getNextGrid(index), index);
     }
 
     public Integer getMaxColumn() {
@@ -101,5 +105,9 @@ public class Table extends Object {
 
     public Integer getIndex(Integer aColumn, Integer aRow) {
         return aColumn + aRow * maxColumn;
+    }
+
+    public Integer getEmptyCount(){
+        return empty.getCount();
     }
 }

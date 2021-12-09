@@ -1,6 +1,8 @@
 package reversi;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class Judge extends Object {
     private Table table;
@@ -34,15 +36,40 @@ public class Judge extends Object {
     }
 
     public void setAction(Integer aColumn, Integer aRow) {
-        Player aPlayer = players.get(index);
+        Player aPlayer = this.getPlayer();
         if (table.isSet(aPlayer, aColumn, aRow)) {
             aPlayer.set(aColumn, aRow);
-            this.addIndex();
+            if (isEnd())
+                this.changeWinPlayer();
+            else
+                this.changePlayer();
         }
         return;
     }
 
-    public Table getBoard() {
+    public Boolean isEnd() {
+        if (table.getEmptyCount() == 0)
+            return true;
+        return false;
+    }
+
+    public void changePlayer() {
+        index++;
+        if (index == players.size())
+            index = 0;
+        return;
+    }
+
+    public void changeWinPlayer() {
+        List<Integer> aList = new ArrayList<>();
+        players.forEach(item -> aList.add(item.getCount()));
+        Optional<Integer> max = aList.stream().max(Integer::compareTo);
+        index = aList.indexOf(max.get());
+        playerSet = false;
+        return;
+    }
+
+    public Table getTable() {
         return table;
     }
 
@@ -50,9 +77,7 @@ public class Judge extends Object {
         return playerSet;
     }
 
-    public void addIndex(){
-        index++;
-        if (index == players.size())
-            index = 0;
+    public Player getPlayer() {
+        return players.get(index);
     }
 }

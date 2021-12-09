@@ -33,16 +33,25 @@ public class Model {
         aWindow.addNotify();
         aWindow.setVisible(true);
         aWindow.toFront();
+        return;
     }
 
     public void set(Integer aColumn, Integer aRow) {
-        judge.setAction(aColumn,aRow);
+        Table aTable = judge.getTable();
+        if (aColumn < aTable.getMaxColumn() && aRow < aTable.getMaxRow())
+            judge.setAction(aColumn,aRow);
+        else
+            judge.changePlayer();
         view.updata();
         return;
     }
 
+    public Judge getJudge(){
+        return judge;
+    }
+
     public Table getBoard() {
-        return judge.getBoard();
+        return judge.getTable();
     }
 
     public Boolean getSet() {

@@ -28,8 +28,8 @@ public class Controller extends MouseInputAdapter {
         Integer aBoardWidth = view.getBoardWidth();
         Integer aMaxColumn = aBoard.getMaxColumn();
         Integer aGridWidth = aBoardWidth / aMaxColumn;
-        Integer aColumn = x / aGridWidth;
-        Integer aRow = y / aGridWidth;
+        Integer aColumn = y / aGridWidth;
+        Integer aRow = x / aGridWidth;
         model.set(aColumn, aRow);
         return;
     }

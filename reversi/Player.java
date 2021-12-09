@@ -1,15 +1,16 @@
 package reversi;
 
 public class Player extends Object {
+    private static Integer number = 1;
     private Table table;
     private Piece piece;
     private String name;
-    private static Integer number = 1;
 
     public Player(Table aBoard, String aName) {
         table = aBoard;
         piece = new Piece(number++);
         name = aName;
+        return;
     }
 
     public Integer getColor() {
@@ -25,14 +26,16 @@ public class Player extends Object {
 
     public void reversi(Integer aColumn, Integer aRow) {
         Grid aGrid = table.getGrid(aColumn, aRow);
-        Integer index = 0;
-        for (Grid aNextGrid : aGrid.getNextGrids()) {
-            Integer aGridColor = aNextGrid.getColor();
-            if (aGridColor > 0 && aGridColor != this.getColor() && reversiColumn(aNextGrid.getNextGrid(index), index))
-                aNextGrid.setPiece(piece);
-            index++;
-        }
+        aGrid.getNextGrids().stream().filter(item -> reversiNext(item, aGrid.getNextGridIndex(item)))
+                .forEach(item -> item.setPiece(piece));
         return;
+    }
+
+    public Boolean reversiNext(Grid aGrid, Integer index) {
+        Integer aColor = aGrid.getColor();
+        if (aColor > 0 && aColor != this.getColor() && reversiColumn(aGrid.getNextGrid(index), index))
+            return true;
+        return false;
     }
 
     public Boolean reversiColumn(Grid aGrid, Integer index) {
@@ -46,5 +49,9 @@ public class Player extends Object {
             return true;
         }
         return false;
+    }
+
+    public Integer getCount(){
+        return piece.getCount();
     }
 }

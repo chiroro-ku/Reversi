@@ -15,5 +15,6 @@ public class Example extends Object {
         Model aModel = new Model(aJudge);
 
         aModel.open("Reversi");
+        return;
     }
 }
