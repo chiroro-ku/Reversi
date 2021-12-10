@@ -1,5 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <project name="Reversi" default="all" basedir=".">
-    <target >
+
+    <property name="package" value="reversi" />
+    <property name="destdir" value="./Classes"/>
+
+    <target name="all" depends="jar" description="build all">
+        <exec executable="date" spawn="false"/>
+    </target>
+
+    <target name="jar" depends="compile" description="make jar file">
+        <jar jarfile="${package}.jar" basedir="${destdir}" manifest="${package}.mf"/>
+        <exec executable="date" spawn="false"/>
+    </target>
+
+    <target name="compile" depends="prepare" description="compile all sources">
+        <javac fork="true" srcdir="${basedir}" destdir="${destdir}" includeAntRuntime="true" encoding="UTF-8" deprecation="on" verbose="false">
+            <compilerarg value="-J-Dfile.encoding=UTF8" />
+            <compilerarg value="-Xlint:all" />
+        </javac>
+        <exec executable="date" spawn="false" />
+    </target>
+
+    <target name="prepare" depends="" description="prepare to compile">
+        <mkdir dir="${destdir}"/>
+        <exec executable="date" spawn="false"/>
+    </target>
+
+    <target name="test" depends="all" description="test">
+        <exec executable="java" spawn="false">
+            <arg line="-Dfile.encoding=UTF-8 -Xmx512m -Xss1024k -jar ${package}.jar"/>
+        </exec>
+        <exec executable="date" spawn="false"/>
+    </target>
+
 </project>
