@@ -4,6 +4,7 @@
 
     <property name="package" value="reversi" />
     <property name="destdir" value="./Classes"/>
+	<property name="instdir" value="./Reversi.app/Contents/Resources/Java" />
 
     <target name="all" depends="jar" description="build all">
         <exec executable="date" spawn="false"/>
@@ -33,5 +34,24 @@
         </exec>
         <exec executable="date" spawn="false"/>
     </target>
+
+    <target name="install" depends="all" description="install into application">
+		<copy file="${package}.jar" todir="${instdir}" />
+		<exec executable="chmod">
+			<arg line="755 ${instdir}/../../MacOS/launcher" />
+		</exec>
+		<exec executable="date" spawn="false" />
+	</target>
+
+    <target name="clean" description="cleaning">
+		<delete dir="${destdir}" />
+		<delete file="${package}.jar" />
+		<delete dir="${instdir}" />
+		<delete>
+			<fileset dir="${package}" includes="*.class" />
+		</delete>
+		<exec executable="date" spawn="false" />
+	</target>
+
 
 </project>

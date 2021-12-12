@@ -26,7 +26,7 @@ public class Model {
         view = new View(this);
         controller = new Controller(this);
         window = new JFrame(title);
-        this.setText("Setting");
+        this.setText("Grid - Setting");
         window.add(view);
         Dimension aDimension = new Dimension(800, 600);
         window.setSize(aDimension);
