@@ -62,14 +62,14 @@ public class Table extends Object {
         return false;
     }
 
-    public Boolean isSet(Player aPlayer, Integer aColumn, Integer aRow) {
+    public Boolean isPlacePiece(Player aPlayer, Integer aColumn, Integer aRow) {
         Integer aColor = aPlayer.getColor();
         Grid aGrid = this.getGrid(aColumn, aRow);
-        if(!aGrid.isSet()) return false;
+        if(!aGrid.isPlacePiece()) return false;
         Integer index = 0;
         for (Grid aNextGrid : aGrid.getNextGrids()) {
             Integer aGridColor = aNextGrid.getColor();
-            if (aGridColor > 0 && aGridColor != aColor && isSetNextGrids(aColor, aNextGrid.getNextGrid(index), index))
+            if (aGridColor > 0 && aGridColor != aColor && isPlacePieceColumn(aColor, aNextGrid.getNextGrid(index), index))
                 return true;
             else
                 index++;
@@ -77,13 +77,13 @@ public class Table extends Object {
         return false;
     }
 
-    public Boolean isSetNextGrids(Integer aColor, Grid aGrid, Integer index) {
+    public Boolean isPlacePieceColumn(Integer aColor, Grid aGrid, Integer index) {
         Integer aGridColor = aGrid.getColor();
         if (aGridColor <= 0)
             return false;
         if (aGridColor == aColor)
             return true;
-        return isSetNextGrids(aColor, aGrid.getNextGrid(index), index);
+        return isPlacePieceColumn(aColor, aGrid.getNextGrid(index), index);
     }
 
     public Integer getMaxColumn() {
@@ -104,10 +104,18 @@ public class Table extends Object {
     }
 
     public Integer getIndex(Integer aColumn, Integer aRow) {
-        return aColumn + aRow * maxColumn;
+        return aColumn + (aRow * maxColumn);
     }
 
     public Integer getEmptyCount(){
         return empty.getCount();
+    }
+
+    public Grid getWallGrid(){
+        return wall;
+    }
+
+    public Piece getEmptyPiece(){
+        return empty;
     }
 }

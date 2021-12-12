@@ -10,11 +10,13 @@ public class Example extends Object {
         Table aTable = new Table(aMaxColumn, aMaxRow);
         Player aPlayerA = new Player(aTable, "a");
         Player aPlayerB = new Player(aTable, "b");
-        List<Player> players = Arrays.asList(aPlayerA,aPlayerB);
+        Player aPlayerC = new Player(aTable, "c");
+        Player aPlayerD = new Player(aTable, "d");
+        List<Player> players = Arrays.asList(aPlayerA,aPlayerB,aPlayerC,aPlayerD);
         Judge aJudge = new Judge(aTable, players);
-        Model aModel = new Model(aJudge);
+        Model aModel = new Model(aJudge,"Reversi");
 
-        aModel.open("Reversi");
+        aModel.open();
         return;
     }
 }

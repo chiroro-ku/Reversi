@@ -7,7 +7,7 @@ public class Grid extends Object {
     private Piece piece;
     private Boolean endGrid;
     private Integer index;
-    private Boolean set;
+    private Boolean placePiece;
     private List<Grid> nextGrids;
     private Integer column;
     private Integer row;
@@ -17,14 +17,14 @@ public class Grid extends Object {
         aPiece.increment();
         endGrid = false;
         index = aInteger;
-        set = true;
+        placePiece = true;
         nextGrids = new ArrayList<>();
         return;
     }
 
     public Grid(Piece aPiece) {
         piece = aPiece;
-        set = false;
+        placePiece = false;
         return;
     }
 
@@ -43,12 +43,12 @@ public class Grid extends Object {
         piece.decrement();
         piece = aPiece;
         piece.increment();
-        set = false;
+        placePiece = false;
         return;
     }
 
-    public void setEndGrid() {
-        endGrid = true;
+    public void setEndGrid(Boolean aBoolean) {
+        endGrid = aBoolean;
         return;
     }
 
@@ -56,8 +56,8 @@ public class Grid extends Object {
         return endGrid;
     }
 
-    public Boolean isSet(){
-        return set;
+    public Boolean isPlacePiece(){
+        return placePiece;
     }
 
     public Piece getPiece() {
@@ -86,5 +86,10 @@ public class Grid extends Object {
 
     public Integer getNextGridIndex(Grid aGrid){
         return nextGrids.indexOf(aGrid);
+    }
+
+    public void setPlacePiece(Boolean aBoolean){
+        placePiece = aBoolean;
+        return;
     }
 }
