@@ -5,6 +5,8 @@
     <property name="package" value="reversi" />
     <property name="destdir" value="./Classes"/>
 	<property name="instdir" value="./Reversi.app/Contents/Resources/Java" />
+	<property name="docdir" value="./JavaDoc" />
+	<property name="packagenames" value="${package}" />
 
     <target name="all" depends="jar" description="build all">
         <exec executable="date" spawn="false"/>
@@ -35,6 +37,31 @@
         <exec executable="date" spawn="false"/>
     </target>
 
+    <target name="doc" depends="all" description="make document (javadoc)">
+		<mkdir dir="${docdir}" />
+		<javadoc
+			locale="ja_JP"
+			sourcepath="${basedir}"
+			destdir="${docdir}"
+			packagenames="${packagenames}"
+			author="true"
+			version="true"
+			charset="UTF-8"
+			encoding="UTF-8"
+			docencoding="UTF-8"
+			linksource="yes"
+			additionalparam="-J-Dfile.encoding=UTF-8"
+			access="private">
+			<doctitle>${doc-title}</doctitle>
+			<bottom>${copyright}</bottom>
+		</javadoc>
+		<exec executable="open">
+			<arg line="-a 'Safari' ${docdir}/index.html" />
+		</exec>
+		<exec executable="date" spawn="false" />
+	</target>
+
+
     <target name="install" depends="all" description="install into application">
 		<copy file="${package}.jar" todir="${instdir}" />
 		<exec executable="chmod">
@@ -47,11 +74,11 @@
 		<delete dir="${destdir}" />
 		<delete file="${package}.jar" />
 		<delete dir="${instdir}" />
+        <delete dir="${docdir}" />
 		<delete>
 			<fileset dir="${package}" includes="*.class" />
 		</delete>
 		<exec executable="date" spawn="false" />
 	</target>
-
 
 </project>

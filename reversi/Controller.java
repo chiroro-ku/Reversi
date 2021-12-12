@@ -4,10 +4,25 @@ import java.awt.Point;
 import java.awt.event.MouseEvent;
 import javax.swing.event.MouseInputAdapter;
 
+/**
+ * コントローラー：制御まわりを専門に行う。
+ */
 public class Controller extends MouseInputAdapter {
+
+	/**
+	 * 情報を握っているモデルのインスタンスを束縛する。
+	 */
     public Model model;
+
+	/**
+	 * 表示を司るビューのインスタンスを束縛する。
+	 */
     public View view;
 
+    /**
+     * コンストラクトである。モデルを設定し、MVC（モデル・ビュー・コントローラ）を構築する。
+     * @param aModel モデルのインスタンス
+     */
     public Controller(Model aModel) {
         model = aModel;
         view = aModel.view;
@@ -18,6 +33,10 @@ public class Controller extends MouseInputAdapter {
         return;
     }
 
+    /**
+	 * 指定されたマウスイベントからクリックされた位置からグリッドを計算して処理を行う。
+	 * @param aMouseEvent マウスイベント
+	 */
     public synchronized void mouseClicked(MouseEvent aMouseEvent) {
         if(model.getGridSetting()){
             Point aPoint = aMouseEvent.getPoint();
