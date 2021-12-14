@@ -19,6 +19,8 @@ public class Judge extends Object {
      */
     private List<Player> players;
 
+    private Boolean end;
+
     /**
      * 駒の配置の可不可を束縛している。
      */
@@ -35,6 +37,7 @@ public class Judge extends Object {
     public Judge(Table aTable, List<Player> player) {
         table = aTable;
         players = player;
+        end = false;
         placePiece = false;
         index = 0;
         this.initialize();
@@ -52,7 +55,7 @@ public class Judge extends Object {
     /**
      * ゲームの準備をしている。プレイヤー数が変更されても、この初期盤面は変更しない。
      */
-    public void prepare(){
+    public void prepare() {
         Integer aMaxColumn = table.getMaxColumn();
         Integer aMaxRow = table.getMaxRow();
         Integer aColumn = aMaxColumn / 2;
@@ -68,8 +71,9 @@ public class Judge extends Object {
 
     /**
      * 列と行から駒の配置の処理を行う。
+     * 
      * @param aColumn 列
-     * @param aRow 行
+     * @param aRow    行
      */
     public void placePieceAction(Integer aColumn, Integer aRow) {
         Player aPlayer = this.getCurrentPlayer();
@@ -90,10 +94,18 @@ public class Judge extends Object {
         return players.get(index);
     }
 
+    public Player getNextPlayer() {
+        if (index + 1 == players.size())
+            return players.get(0);
+        return players.get(index + 1);
+    }
+
     /**
      * ゲームの終了に応答する。
      */
     public Boolean isEnd() {
+        if (end == true)
+            return true;
         if (table.getEmptyCount() == 0)
             return true;
         return false;
@@ -106,16 +118,24 @@ public class Judge extends Object {
         index++;
         if (index == players.size())
             index = 0;
-        if(!isPlayerPlacePiece())
-            changePlayer();
+        Integer current = index;
+        while (!isPlayerPlacePiece()) {
+            index++;
+            if (index == players.size())
+                index = 0;
+            if (current == index) {
+                this.changeWinPlayer();
+                return;
+            }
+        }
         return;
     }
 
-    public Boolean isPlayerPlacePiece(){
+    public Boolean isPlayerPlacePiece() {
         Player aPlayer = this.getCurrentPlayer();
         List<Grid> grids = table.getGrids();
-        for(Grid aGrid:grids){
-            if(table.isPlacePiece(aPlayer, aGrid))
+        for (Grid aGrid : grids) {
+            if (table.isPlacePiece(aPlayer, aGrid))
                 return true;
         }
         return false;
@@ -125,17 +145,18 @@ public class Judge extends Object {
      * ジャッジが勝利したプレイヤーを見る。
      */
     public void changeWinPlayer() {
-        System.out.println("ok");
         List<Integer> aList = new ArrayList<>();
         players.forEach(item -> aList.add(item.getCount()));
         Optional<Integer> max = aList.stream().max(Integer::compareTo);
         index = aList.indexOf(max.get());
         placePiece = false;
+        end = true;
         return;
     }
 
     /**
      * 盤面のコンストラクトに応答する。
+     * 
      * @return 盤面
      */
     public Table getTable() {
@@ -145,8 +166,12 @@ public class Judge extends Object {
     /**
      * プレイヤー全員のコンストラクトに応答する。
      */
-    public List<Player> getPlayers(){
+    public List<Player> getPlayers() {
         return players;
+    }
+
+    public Integer getPlayersNumber() {
+        return players.size();
     }
 
     /**
@@ -158,21 +183,22 @@ public class Judge extends Object {
 
     /**
      * 色からプレイヤーを取得して、その色のプレイヤーを応答する。
+     * 
      * @param aColor
      * @return 指定された色のプレイヤー
      */
-    public Player getPlayer(Integer aColor){
-        return players.get(aColor-1);
+    public Player getPlayer(Integer aColor) {
+        return players.get(aColor - 1);
     }
 
-    public void addPlayer(Player aPlayer){
+    public void addPlayer(Player aPlayer) {
         players.add(aPlayer);
         return;
     }
 
-    public void setTable(Table aTable){
+    public void setTable(Table aTable) {
         table = aTable;
-        players.forEach(item->item.setTable(aTable));
+        players.forEach(item -> item.setTable(aTable));
         return;
     }
 }

@@ -90,8 +90,4 @@ public class Player extends Object {
         table = aTable;
         return;
     }
-
-    public static Integer getPlayerNumber(){
-        return number;
-    }
 }

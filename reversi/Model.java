@@ -66,6 +66,19 @@ public class Model {
         return;
     }
 
+    public Model(Judge aJudge, String aTitle, Boolean aBoolean) {
+        judge = aJudge;
+        tableSetting = aBoolean;
+        playerSetting = aBoolean;
+        gridSetting = aBoolean;
+        title = aTitle;
+        return;
+    }
+
+    public void initialize() {
+        return;
+    }
+
     /**
      * MVC（モデル・ビュー・コントローラ）を構築して、ウィンドウを表示する。
      */
@@ -73,7 +86,6 @@ public class Model {
         view = new View(this);
         controller = new Controller(this);
         window = new JFrame(title);
-        this.setText("Table - Setting");
         window.add(view);
         Dimension aDimension = new Dimension(800, 600);
         window.setSize(aDimension);
@@ -87,6 +99,7 @@ public class Model {
         window.addNotify();
         window.setVisible(true);
         window.toFront();
+        this.update();
         return;
     }
 
@@ -95,10 +108,8 @@ public class Model {
         Integer aMaxColumn = aTable.getMaxColumn();
         Integer aMaxRow = aTable.getMaxRow();
         if (aColumn >= aMaxColumn || aRow >= aMaxRow) {
-            this.setText("Player - Setting");
             tableSetting = false;
-            judge.prepare();
-            view.updata();
+            this.update();
             return;
         }
         judge.setTable(new Table(aMaxColumn + 1, aMaxRow + 1));
@@ -109,13 +120,13 @@ public class Model {
     public void playerSetting(Integer aColumn, Integer aRow) {
         Table aTable = judge.getTable();
         if (aColumn >= aTable.getMaxColumn() || aRow >= aTable.getMaxRow()) {
-            this.setText("Grid - Setting");
             playerSetting = false;
             judge.prepare();
             view.updata();
+            this.update();
             return;
         }
-        String aName = String.valueOf(Player.getPlayerNumber());
+        String aName = String.valueOf(judge.getPlayersNumber() + 1);
         Player aPlayer = new Player(aTable, aName);
         judge.addPlayer(aPlayer);
         view.updata();
@@ -131,8 +142,8 @@ public class Model {
     public void gridSetting(Integer aColumn, Integer aRow) {
         Table aTable = judge.getTable();
         if (aColumn >= aTable.getMaxColumn() || aRow >= aTable.getMaxRow()) {
-            this.setText("Game - " + judge.getCurrentPlayer().getName());
             gridSetting = false;
+            this.update();
             return;
         }
         Grid aGrid = aTable.getGrid(aColumn, aRow);
@@ -142,7 +153,7 @@ public class Model {
             aPiece = judge.getPlayer(aColor + 1).getPiece();
             aGrid.setPiece(aPiece);
             aGrid.setPlacePiece(false);
-        } else if (aColor + 1 == Player.getPlayerNumber()) {
+        } else if (aColor == judge.getPlayersNumber()) {
             aPiece = aTable.getWallGrid().getPiece();
             aGrid.setPiece(aPiece);
         } else if (aColor > 0) {
@@ -169,10 +180,7 @@ public class Model {
             judge.placePieceAction(aColumn, aRow);
         else
             judge.changePlayer();
-        if (judge.isEnd())
-            this.setText("Game - Win - " + judge.getCurrentPlayer().getName());
-        else
-            this.setText("Game - " + judge.getCurrentPlayer().getName());
+        this.update();
         view.updata();
         return;
     }
@@ -207,7 +215,7 @@ public class Model {
         return judge.getTable();
     }
 
-    public Boolean getTableSetting(){
+    public Boolean getTableSetting() {
         return tableSetting;
     }
 
@@ -242,6 +250,20 @@ public class Model {
         Table aTable = judge.getTable();
         System.out.print("e" + aTable.getEmptyPiece().getCount());
         System.out.println();
+        return;
+    }
+
+    public void update() {
+        if (tableSetting)
+            this.setText("Table - Setting");
+        else if (playerSetting)
+            this.setText("Player - Setting");
+        else if (gridSetting)
+            this.setText("Grid - Setting");
+        else if (judge.getPlacePiece())
+            this.setText("Game - " + judge.getCurrentPlayer().getName());
+        else if (judge.isEnd())
+            this.setText("Game - Win - " + judge.getCurrentPlayer().getName());
         return;
     }
 }

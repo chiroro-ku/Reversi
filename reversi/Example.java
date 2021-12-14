@@ -13,7 +13,7 @@ public class Example extends Object {
         Player aPlayerB = new Player(aTable, "2");
         List<Player> players = new ArrayList<>(Arrays.asList(aPlayerA,aPlayerB));
         Judge aJudge = new Judge(aTable, players);
-        Model aModel = new Model(aJudge,"Reversi");
+        Model aModel = new Model(aJudge,"Reversi",true);
 
         aModel.open();
         return;
