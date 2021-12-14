@@ -12,19 +12,29 @@ import javax.swing.JFrame;
 public class Model {
 
     /**
-	 * 描画する文字列を束縛するフィールドである。
-	 */
+     * 描画する文字列を束縛するフィールドである。
+     */
     public View view;
 
     /**
-	 * 描画する文字列のフォントサイズ群を定数として束縛しておくフィールドである。
-	 */
+     * 描画する文字列のフォントサイズ群を定数として束縛しておくフィールドである。
+     */
     public Controller controller;
 
     /**
      * 盤面とプレイヤーを束縛したフィールドである。
      */
     private Judge judge;
+
+    /**
+     * 盤面の設定の可不可を束縛する。
+     */
+    private Boolean tableSetting;
+
+    /**
+     * プレイヤー設定の可不可を束縛する。
+     */
+    private Boolean playerSetting;
 
     /**
      * グリッドの設定の可不可を束縛する。
@@ -37,18 +47,20 @@ public class Model {
     private JFrame window;
 
     /**
-     * ウィンドウのフレームタイトルを束縛する。
-     * フレームタイトルをテキストとして利用する。
+     * ウィンドウのフレームタイトルを束縛する。フレームタイトルをテキストとして利用する。
      */
     private String title;
 
     /**
      * コンストラクトである。ジャッジとフレームのタイトルを設定する。
+     * 
      * @param aJudge ジャッジのインスタンス
      * @param aTitle フレームタイトル
      */
     public Model(Judge aJudge, String aTitle) {
         judge = aJudge;
+        tableSetting = true;
+        playerSetting = true;
         gridSetting = true;
         title = aTitle;
         return;
@@ -61,7 +73,7 @@ public class Model {
         view = new View(this);
         controller = new Controller(this);
         window = new JFrame(title);
-        this.setText("Grid - Setting");
+        this.setText("Table - Setting");
         window.add(view);
         Dimension aDimension = new Dimension(800, 600);
         window.setSize(aDimension);
@@ -78,15 +90,48 @@ public class Model {
         return;
     }
 
+    public void tableSettring(Integer aColumn, Integer aRow) {
+        Table aTable = judge.getTable();
+        Integer aMaxColumn = aTable.getMaxColumn();
+        Integer aMaxRow = aTable.getMaxRow();
+        if (aColumn >= aMaxColumn || aRow >= aMaxRow) {
+            this.setText("Player - Setting");
+            tableSetting = false;
+            judge.prepare();
+            view.updata();
+            return;
+        }
+        judge.setTable(new Table(aMaxColumn + 1, aMaxRow + 1));
+        view.updata();
+        return;
+    }
+
+    public void playerSetting(Integer aColumn, Integer aRow) {
+        Table aTable = judge.getTable();
+        if (aColumn >= aTable.getMaxColumn() || aRow >= aTable.getMaxRow()) {
+            this.setText("Grid - Setting");
+            playerSetting = false;
+            judge.prepare();
+            view.updata();
+            return;
+        }
+        String aName = String.valueOf(Player.getPlayerNumber());
+        Player aPlayer = new Player(aTable, aName);
+        judge.addPlayer(aPlayer);
+        view.updata();
+        return;
+    }
+
     /**
      * 行と列からグリッドの設定を変更する。
+     * 
      * @param aColumn 列
-     * @param aRow 行
+     * @param aRow    行
      */
     public void gridSetting(Integer aColumn, Integer aRow) {
         Table aTable = judge.getTable();
         if (aColumn >= aTable.getMaxColumn() || aRow >= aTable.getMaxRow()) {
-            this.setText("Game - " + judge.getPlayer().getName());
+            this.setText("Game - " + judge.getCurrentPlayer().getName());
             gridSetting = false;
             return;
         }
@@ -114,8 +159,9 @@ public class Model {
 
     /**
      * 行と列から駒を配置する。
+     * 
      * @param aColumn 列
-     * @param aRow 行
+     * @param aRow    行
      */
     public void placePiece(Integer aColumn, Integer aRow) {
         Table aTable = judge.getTable();
@@ -124,9 +170,9 @@ public class Model {
         else
             judge.changePlayer();
         if (judge.isEnd())
-            this.setText("Game - Win -" + judge.getPlayer().getName());
+            this.setText("Game - Win - " + judge.getCurrentPlayer().getName());
         else
-            this.setText("Game - " + judge.getPlayer().getName());
+            this.setText("Game - " + judge.getCurrentPlayer().getName());
         view.updata();
         return;
     }
@@ -134,6 +180,7 @@ public class Model {
     /**
      * テキストを設定する。
      * フレームタイトルの変更をしている。
+     * 
      * @param aText テキスト
      */
     public void setText(String aText) {
@@ -144,6 +191,7 @@ public class Model {
 
     /**
      * ジャッジに応答する。
+     * 
      * @return ジャッジ
      */
     public Judge getJudge() {
@@ -151,15 +199,25 @@ public class Model {
     }
 
     /**
-     * テーブルに対応する。
-     * @return ジャッジに対応する。
+     * テーブルに応答する。
+     * 
+     * @return テーブル
      */
     public Table getTable() {
         return judge.getTable();
     }
 
+    public Boolean getTableSetting(){
+        return tableSetting;
+    }
+
+    public Boolean getPlayerSetting() {
+        return playerSetting;
+    }
+
     /**
-     * グリッドの設定の可不可に対応する。
+     * グリッドの設定の可不可を応答する。
+     * 
      * @return 可不可
      */
     public Boolean getGridSetting() {
@@ -167,7 +225,8 @@ public class Model {
     }
 
     /**
-     * 駒の配置の可不可に対応する。
+     * 駒の配置の可不可を応答する。
+     * 
      * @return 可不可
      */
     public Boolean getPlacePiece() {

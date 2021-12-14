@@ -55,14 +55,14 @@ public class Player extends Object {
     }
 
     public Boolean reversiNext(Grid aGrid, Integer index) {
-        Integer aColor = aGrid.getColor();
+        Integer aColor = aGrid.getPieceColor();
         if (aColor > 0 && aColor != this.getColor() && reversiColumn(aGrid.getNextGrid(index), index))
             return true;
         return false;
     }
 
     public Boolean reversiColumn(Grid aGrid, Integer index) {
-        Integer aGridColor = aGrid.getColor();
+        Integer aGridColor = aGrid.getPieceColor();
         if (aGridColor <= 0)
             return false;
         if (aGridColor == this.getColor())
@@ -84,6 +84,11 @@ public class Player extends Object {
 
     public String getName(){
         return name;
+    }
+
+    public void setTable(Table aTable){
+        table = aTable;
+        return;
     }
 
     public static Integer getPlayerNumber(){

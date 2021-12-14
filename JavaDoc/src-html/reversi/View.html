@@ -72,9 +72,9 @@
 <span class="source-line-no">059</span><span id="line.59">        List&lt;Player&gt; players = model.getJudge().getPlayers();</span>
 <span class="source-line-no">060</span><span id="line.60">        players.forEach(item -&gt; paintPiece(aGraphics, item.getViewColor(), maxColumn * gridWidth,</span>
 <span class="source-line-no">061</span><span id="line.61">                (item.getColor() - 1) * gridWidth, gridWidth));</span>
-<span class="source-line-no">062</span><span id="line.62">        paintPiece(aGraphics, model.getJudge().getPlayer().getViewColor(), maxColumn * gridWidth,</span>
+<span class="source-line-no">062</span><span id="line.62">        paintPiece(aGraphics, model.getJudge().getCurrentPlayer().getViewColor(), maxColumn * gridWidth,</span>
 <span class="source-line-no">063</span><span id="line.63">                (maxRow - 1) * gridWidth, gridWidth);</span>
-<span class="source-line-no">064</span><span id="line.64">        grids.stream().filter(item -&gt; item.getColor() &gt;= 0).forEach(item -&gt; paintGrid(aGraphics, item, gridWidth));</span>
+<span class="source-line-no">064</span><span id="line.64">        grids.stream().filter(item -&gt; item.getPieceColor() &gt;= 0).forEach(item -&gt; paintGrid(aGraphics, item, gridWidth));</span>
 <span class="source-line-no">065</span><span id="line.65">        return;</span>
 <span class="source-line-no">066</span><span id="line.66">    }</span>
 <span class="source-line-no">067</span><span id="line.67"></span>

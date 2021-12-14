@@ -1,5 +1,6 @@
 package reversi;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -8,11 +9,9 @@ public class Example extends Object {
         Integer aMaxColumn = 8;
         Integer aMaxRow = 8;
         Table aTable = new Table(aMaxColumn, aMaxRow);
-        Player aPlayerA = new Player(aTable, "a");
-        Player aPlayerB = new Player(aTable, "b");
-        Player aPlayerC = new Player(aTable, "c");
-        Player aPlayerD = new Player(aTable, "d");
-        List<Player> players = Arrays.asList(aPlayerA,aPlayerB,aPlayerC,aPlayerD);
+        Player aPlayerA = new Player(aTable, "1");
+        Player aPlayerB = new Player(aTable, "2");
+        List<Player> players = new ArrayList<>(Arrays.asList(aPlayerA,aPlayerB));
         Judge aJudge = new Judge(aTable, players);
         Model aModel = new Model(aJudge,"Reversi");
 

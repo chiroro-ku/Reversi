@@ -99,7 +99,7 @@
 <span class="source-line-no">086</span><span id="line.86">    public void gridSetting(Integer aColumn, Integer aRow) {</span>
 <span class="source-line-no">087</span><span id="line.87">        Table aTable = judge.getTable();</span>
 <span class="source-line-no">088</span><span id="line.88">        if (aColumn &gt;= aTable.getMaxColumn() || aRow &gt;= aTable.getMaxRow()) {</span>
-<span class="source-line-no">089</span><span id="line.89">            this.setText("Game - " + judge.getPlayer().getName());</span>
+<span class="source-line-no">089</span><span id="line.89">            this.setText("Game - " + judge.getCurrentPlayer().getName());</span>
 <span class="source-line-no">090</span><span id="line.90">            gridSetting = false;</span>
 <span class="source-line-no">091</span><span id="line.91">            return;</span>
 <span class="source-line-no">092</span><span id="line.92">        }</span>
@@ -137,9 +137,9 @@
 <span class="source-line-no">124</span><span id="line.124">        else</span>
 <span class="source-line-no">125</span><span id="line.125">            judge.changePlayer();</span>
 <span class="source-line-no">126</span><span id="line.126">        if (judge.isEnd())</span>
-<span class="source-line-no">127</span><span id="line.127">            this.setText("Game - Win -" + judge.getPlayer().getName());</span>
+<span class="source-line-no">127</span><span id="line.127">            this.setText("Game - Win -" + judge.getCurrentPlayer().getName());</span>
 <span class="source-line-no">128</span><span id="line.128">        else</span>
-<span class="source-line-no">129</span><span id="line.129">            this.setText("Game - " + judge.getPlayer().getName());</span>
+<span class="source-line-no">129</span><span id="line.129">            this.setText("Game - " + judge.getCurrentPlayer().getName());</span>
 <span class="source-line-no">130</span><span id="line.130">        view.updata();</span>
 <span class="source-line-no">131</span><span id="line.131">        return;</span>
 <span class="source-line-no">132</span><span id="line.132">    }</span>
@@ -147,7 +147,7 @@
 <span class="source-line-no">134</span><span id="line.134">    /**</span>
 <span class="source-line-no">135</span><span id="line.135">     * テキストを設定する。</span>
 <span class="source-line-no">136</span><span id="line.136">     * フレームタイトルの変更をしている。</span>
-<span class="source-line-no">137</span><span id="line.137">     * @param aText</span>
+<span class="source-line-no">137</span><span id="line.137">     * @param aText テキスト</span>
 <span class="source-line-no">138</span><span id="line.138">     */</span>
 <span class="source-line-no">139</span><span id="line.139">    public void setText(String aText) {</span>
 <span class="source-line-no">140</span><span id="line.140">        String aString = title + " - " + aText;</span>

@@ -68,14 +68,14 @@
 <span class="source-line-no">055</span><span id="line.55">    }</span>
 <span class="source-line-no">056</span><span id="line.56"></span>
 <span class="source-line-no">057</span><span id="line.57">    public Boolean reversiNext(Grid aGrid, Integer index) {</span>
-<span class="source-line-no">058</span><span id="line.58">        Integer aColor = aGrid.getColor();</span>
+<span class="source-line-no">058</span><span id="line.58">        Integer aColor = aGrid.getPieceColor();</span>
 <span class="source-line-no">059</span><span id="line.59">        if (aColor &gt; 0 &amp;&amp; aColor != this.getColor() &amp;&amp; reversiColumn(aGrid.getNextGrid(index), index))</span>
 <span class="source-line-no">060</span><span id="line.60">            return true;</span>
 <span class="source-line-no">061</span><span id="line.61">        return false;</span>
 <span class="source-line-no">062</span><span id="line.62">    }</span>
 <span class="source-line-no">063</span><span id="line.63"></span>
 <span class="source-line-no">064</span><span id="line.64">    public Boolean reversiColumn(Grid aGrid, Integer index) {</span>
-<span class="source-line-no">065</span><span id="line.65">        Integer aGridColor = aGrid.getColor();</span>
+<span class="source-line-no">065</span><span id="line.65">        Integer aGridColor = aGrid.getPieceColor();</span>
 <span class="source-line-no">066</span><span id="line.66">        if (aGridColor &lt;= 0)</span>
 <span class="source-line-no">067</span><span id="line.67">            return false;</span>
 <span class="source-line-no">068</span><span id="line.68">        if (aGridColor == this.getColor())</span>

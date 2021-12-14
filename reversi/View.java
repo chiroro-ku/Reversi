@@ -59,9 +59,9 @@ public class View extends JPanel {
         List<Player> players = model.getJudge().getPlayers();
         players.forEach(item -> paintPiece(aGraphics, item.getViewColor(), maxColumn * gridWidth,
                 (item.getColor() - 1) * gridWidth, gridWidth));
-        paintPiece(aGraphics, model.getJudge().getPlayer().getViewColor(), maxColumn * gridWidth,
+        paintPiece(aGraphics, model.getJudge().getCurrentPlayer().getViewColor(), maxColumn * gridWidth,
                 (maxRow - 1) * gridWidth, gridWidth);
-        grids.stream().filter(item -> item.getColor() >= 0).forEach(item -> paintGrid(aGraphics, item, gridWidth));
+        grids.stream().filter(item -> item.getPieceColor() >= 0).forEach(item -> paintGrid(aGraphics, item, gridWidth));
         return;
     }
 
