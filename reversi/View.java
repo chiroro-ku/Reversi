@@ -1,9 +1,9 @@
 package reversi;
 
+import java.awt.Point;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.util.List;
-
 import javax.swing.JPanel;
 
 /**
@@ -13,27 +13,22 @@ import javax.swing.JPanel;
 public class View extends JPanel {
 
     /**
-	 * モデルを束縛するフィールドである。
-	 */
+     * モデルを束縛するフィールドである。
+     */
     public Model model;
 
     /**
-	 * コントローラを束縛するフィールドである。
-	 */
+     * コントローラを束縛するフィールドである。
+     */
     public Controller controller;
 
     /**
-     * 盤面全体の幅である。
-     */
-    private Integer tableWidth;
-
-    /**
      * コンストラクトである。モデルを設定する。
+     * 
      * @param aModel モデルのインスタンス
      */
     public View(Model aModel) {
         model = aModel;
-        tableWidth = 0;
         return;
     }
 
@@ -47,15 +42,16 @@ public class View extends JPanel {
 
     /**
      * 指定されたグラフィックスに対して、盤面とプレイヤを描画する。
+     * 
      * @param aGraphics グラフィックスコンテキスト
      */
     public void paintComponent(Graphics aGraphics) {
-        tableWidth = this.getHeight();
+        Integer aTableWidth = this.getHeight();
         Table aTable = model.getTable();
         List<Grid> grids = aTable.getGrids();
         Integer maxColumn = aTable.getMaxColumn();
         Integer maxRow = aTable.getMaxRow();
-        Integer gridWidth = tableWidth / maxColumn;
+        Integer gridWidth = aTableWidth / maxColumn;
         List<Player> players = model.getJudge().getPlayers();
         players.forEach(item -> paintPiece(aGraphics, item.getViewColor(), maxColumn * gridWidth,
                 (item.getColor() - 1) * gridWidth, gridWidth));
@@ -67,9 +63,10 @@ public class View extends JPanel {
 
     /**
      * 一つのグリッドを描画する。
+     * 
      * @param aGraphics グラフィックスコンテキスト
-     * @param aGrid グリッド
-     * @param width グリッドを描画するときの幅
+     * @param aGrid     グリッド
+     * @param width     グリッドを描画するときの幅
      */
     public void paintGrid(Graphics aGraphics, Grid aGrid, Integer width) {
         Integer aColumn = aGrid.getColumn();
@@ -86,11 +83,12 @@ public class View extends JPanel {
 
     /**
      * 一つの駒を描画する。
+     * 
      * @param aGraphics グラフィックスコンテキスト
-     * @param aColor 駒の色
-     * @param x 駒を描画するときのx座標
-     * @param y 駒を描画するときのy座標
-     * @param width 駒の幅
+     * @param aColor    駒の色
+     * @param x         駒を描画するときのx座標
+     * @param y         駒を描画するときのy座標
+     * @param width     駒の幅
      */
     public void paintPiece(Graphics aGraphics, Color aColor, Integer x, Integer y, Integer width) {
         aGraphics.setColor(aColor);
@@ -100,9 +98,28 @@ public class View extends JPanel {
 
     /**
      * 盤面全体の幅に応答する。
+     * 
      * @return 盤面全体の幅
      */
     public Integer getTableWidth() {
-        return tableWidth;
+        return this.getHeight();
+    }
+
+    public Integer getIndex(Point aPoint) {
+        Integer index;
+        Integer aTableWidth = this.getTableWidth();
+        int x = (int) aPoint.getX();
+        int y = (int) aPoint.getY();
+        if (x >= aTableWidth|| y >= aTableWidth) {
+            index = -1;
+        } else {
+            Table aTable = model.getTable();
+            Integer aMaxColumn = aTable.getMaxColumn();
+            Integer aGridWidth = aTableWidth / aMaxColumn;
+            Integer aColumn = y / aGridWidth;
+            Integer aRow = x / aGridWidth;
+            index = aTable.getIndex(aColumn, aRow);
+        }
+        return index;
     }
 }

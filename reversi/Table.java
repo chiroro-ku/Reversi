@@ -167,6 +167,12 @@ public class Table extends Object {
         return isPlacePieceColumn(aColor, aGrid.getNextGrid(index), index);
     }
 
+    public Boolean isTable(Integer aColumn,Integer aRow){
+        if(aColumn < maxColumn && aRow < maxRow)
+            return true;
+        return false;
+    }
+
     /**
      * 列と行からグリッドを応答する。
      * @param aColumn
@@ -175,7 +181,7 @@ public class Table extends Object {
      */
     public Grid getGrid(Integer aColumn, Integer aRow) {
         Integer index = this.getIndex(aColumn, aRow);
-        return grids.get(index);
+        return this.getGrid(index);
     }
 
     /**
@@ -184,6 +190,10 @@ public class Table extends Object {
      */
     public Integer getIndex(Integer aColumn, Integer aRow) {
         return aColumn + (aRow * maxColumn);
+    }
+
+    public Grid getGrid(Integer index){
+        return grids.get(index);
     }
 
     /**

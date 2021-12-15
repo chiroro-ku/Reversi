@@ -1,5 +1,6 @@
 package reversi;
 
+import java.awt.Point;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.util.List;
@@ -103,33 +104,35 @@ public class Model {
         return;
     }
 
-    public void tableSettring(Integer aColumn, Integer aRow) {
-        Table aTable = judge.getTable();
-        Integer aMaxColumn = aTable.getMaxColumn();
-        Integer aMaxRow = aTable.getMaxRow();
-        if (aColumn >= aMaxColumn || aRow >= aMaxRow) {
+    public void tableSettring(Point aPoint) {
+        Integer index = view.getIndex(aPoint);
+        if (index >= 0) {
+            Table aTable = this.getTable();
+            Integer aMaxColumn = aTable.getMaxColumn();
+            Integer aMaxRow = aTable.getMaxRow();
+            judge.setTable(new Table(aMaxColumn + 1, aMaxRow + 1));
+            view.updata();
+        } else {
             tableSetting = false;
             this.update();
-            return;
         }
-        judge.setTable(new Table(aMaxColumn + 1, aMaxRow + 1));
-        view.updata();
         return;
     }
 
-    public void playerSetting(Integer aColumn, Integer aRow) {
-        Table aTable = judge.getTable();
-        if (aColumn >= aTable.getMaxColumn() || aRow >= aTable.getMaxRow()) {
+    public void playerSetting(Point aPoint) {
+        Integer index = view.getIndex(aPoint);
+        if (index >= 0) {
+            Table aTable = this.getTable();
+            String aName = String.valueOf(judge.getPlayersNumber() + 1);
+            Player aPlayer = new Player(aTable, aName);
+            judge.addPlayer(aPlayer);
+            view.updata();
+        } else {
             playerSetting = false;
             judge.prepare();
             view.updata();
             this.update();
-            return;
         }
-        String aName = String.valueOf(judge.getPlayersNumber() + 1);
-        Player aPlayer = new Player(aTable, aName);
-        judge.addPlayer(aPlayer);
-        view.updata();
         return;
     }
 
@@ -139,32 +142,33 @@ public class Model {
      * @param aColumn 列
      * @param aRow    行
      */
-    public void gridSetting(Integer aColumn, Integer aRow) {
-        Table aTable = judge.getTable();
-        if (aColumn >= aTable.getMaxColumn() || aRow >= aTable.getMaxRow()) {
+    public void gridSetting(Point aPoint) {
+        Integer index = view.getIndex(aPoint);
+        if (index >= 0) {
+            Table aTable = this.getTable();
+            Grid aGrid = aTable.getGrid(index);
+            Piece aPiece = aGrid.getPiece();
+            Integer aColor = aPiece.getColor();
+            if (aColor == aTable.getEmptyPiece().getColor()) {
+                aPiece = judge.getPlayer(aColor + 1).getPiece();
+                aGrid.setPiece(aPiece);
+                aGrid.setPlacePiece(false);
+            } else if (aColor == judge.getPlayersNumber()) {
+                aPiece = aTable.getWallGrid().getPiece();
+                aGrid.setPiece(aPiece);
+            } else if (aColor > 0) {
+                aPiece = judge.getPlayer(aColor + 1).getPiece();
+                aGrid.setPiece(aPiece);
+            } else {
+                aPiece = aTable.getEmptyPiece();
+                aGrid.setPiece(aPiece);
+                aGrid.setPlacePiece(true);
+            }
+            view.updata();
+        } else {
             gridSetting = false;
             this.update();
-            return;
         }
-        Grid aGrid = aTable.getGrid(aColumn, aRow);
-        Piece aPiece = aGrid.getPiece();
-        Integer aColor = aPiece.getColor();
-        if (aColor == aTable.getEmptyPiece().getColor()) {
-            aPiece = judge.getPlayer(aColor + 1).getPiece();
-            aGrid.setPiece(aPiece);
-            aGrid.setPlacePiece(false);
-        } else if (aColor == judge.getPlayersNumber()) {
-            aPiece = aTable.getWallGrid().getPiece();
-            aGrid.setPiece(aPiece);
-        } else if (aColor > 0) {
-            aPiece = judge.getPlayer(aColor + 1).getPiece();
-            aGrid.setPiece(aPiece);
-        } else {
-            aPiece = aTable.getEmptyPiece();
-            aGrid.setPiece(aPiece);
-            aGrid.setPlacePiece(true);
-        }
-        view.updata();
         return;
     }
 
@@ -174,9 +178,16 @@ public class Model {
      * @param aColumn 列
      * @param aRow    行
      */
-    public void placePiece(Integer aColumn, Integer aRow) {
-        Table aTable = judge.getTable();
-        if (aColumn < aTable.getMaxColumn() && aRow < aTable.getMaxRow())
+    public void placePiece(Point aPoint) {
+        int x = (int) aPoint.getX();
+        int y = (int) aPoint.getY();
+        Table aTable = this.getTable();
+        Integer aMaxColumn = aTable.getMaxColumn();
+        Integer aTableWidth = view.getTableWidth();
+        Integer aGridWidth = aTableWidth / aMaxColumn;
+        Integer aColumn = y / aGridWidth;
+        Integer aRow = x / aGridWidth;
+        if (aTable.isTable(aColumn, aRow))
             judge.placePieceAction(aColumn, aRow);
         else
             judge.changePlayer();
@@ -247,7 +258,7 @@ public class Model {
     public void tablePrint() {
         List<Player> aList = judge.getPlayers();
         aList.forEach(item -> System.out.print(item.getName() + item.getPiece().getCount() + " "));
-        Table aTable = judge.getTable();
+        Table aTable = this.getTable();
         System.out.print("e" + aTable.getEmptyPiece().getCount());
         System.out.println();
         return;

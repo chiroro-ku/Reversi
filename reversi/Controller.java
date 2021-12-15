@@ -40,50 +40,15 @@ public class Controller extends MouseInputAdapter {
      * @param aMouseEvent マウスイベント
      */
     public synchronized void mouseClicked(MouseEvent aMouseEvent) {
-        if(model.getTableSetting()){
-            Point aPoint = aMouseEvent.getPoint();
-            int x = (int) aPoint.getX();
-            int y = (int) aPoint.getY();
-            Table aTable = model.getTable();
-            Integer aTableWidth = view.getTableWidth();
-            Integer aMaxColumn = aTable.getMaxColumn();
-            Integer aGridWidth = aTableWidth / aMaxColumn;
-            Integer aColumn = y / aGridWidth;
-            Integer aRow = x / aGridWidth;
-            model.tableSettring(aColumn, aRow);
+        Point aPoint = aMouseEvent.getPoint();
+        if (model.getTableSetting()) {
+            model.tableSettring(aPoint);
         } else if (model.getPlayerSetting()) {
-            Point aPoint = aMouseEvent.getPoint();
-            int x = (int) aPoint.getX();
-            int y = (int) aPoint.getY();
-            Table aTable = model.getTable();
-            Integer aTableWidth = view.getTableWidth();
-            Integer aMaxColumn = aTable.getMaxColumn();
-            Integer aGridWidth = aTableWidth / aMaxColumn;
-            Integer aColumn = y / aGridWidth;
-            Integer aRow = x / aGridWidth;
-            model.playerSetting(aColumn, aRow);
-        } else if (model.getGridSetting()) {
-            Point aPoint = aMouseEvent.getPoint();
-            int x = (int) aPoint.getX();
-            int y = (int) aPoint.getY();
-            Table aTable = model.getTable();
-            Integer aTableWidth = view.getTableWidth();
-            Integer aMaxColumn = aTable.getMaxColumn();
-            Integer aGridWidth = aTableWidth / aMaxColumn;
-            Integer aColumn = y / aGridWidth;
-            Integer aRow = x / aGridWidth;
-            model.gridSetting(aColumn, aRow);
-        } else if (model.getPlacePiece()) {
-            Point aPoint = aMouseEvent.getPoint();
-            int x = (int) aPoint.getX();
-            int y = (int) aPoint.getY();
-            Table aTable = model.getTable();
-            Integer aTableWidth = view.getTableWidth();
-            Integer aMaxColumn = aTable.getMaxColumn();
-            Integer aGridWidth = aTableWidth / aMaxColumn;
-            Integer aColumn = y / aGridWidth;
-            Integer aRow = x / aGridWidth;
-            model.placePiece(aColumn, aRow);
+            model.playerSetting(aPoint);
+        } else if (model.getGridSetting()){
+            model.gridSetting(aPoint);
+        }else if (model.getPlacePiece()) {
+            model.placePiece(aPoint);
         }
         return;
     }
