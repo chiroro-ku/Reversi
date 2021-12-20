@@ -61,11 +61,23 @@ public class Judge extends Object {
         Integer aColumn = aMaxColumn / 2;
         Integer aRow = aMaxRow / 2;
 
-        players.get(0).placePiece(aColumn, aRow);
-        players.get(0).placePiece(aColumn - 1, aRow - 1);
-        players.get(1).placePiece(aColumn - 1, aRow);
-        players.get(1).placePiece(aColumn, aRow - 1);
+        table.getGrid(aColumn, aRow).setPiece(players.get(0).getPiece());
+        table.getGrid(aColumn - 1, aRow - 1).setPiece(players.get(0).getPiece());
+        table.getGrid(aColumn - 1, aRow).setPiece(players.get(1).getPiece());
+        table.getGrid(aColumn, aRow - 1).setPiece(players.get(1).getPiece());
         placePiece = true;
+        return;
+    }
+
+    public void game() {
+        Player aPlayer = this.getCurrentPlayer();
+        if (aPlayer.isComputer()) {
+            placePiece = false;
+            Computer aComputer = (Computer) aPlayer;
+            aComputer.placePiece();
+            placePiece = true;
+            this.tableJuge();
+        }
         return;
     }
 
@@ -75,16 +87,62 @@ public class Judge extends Object {
      * @param aColumn 列
      * @param aRow    行
      */
-    public void placePieceAction(Integer aColumn, Integer aRow) {
+    public void placePiece(Integer aColumn, Integer aRow) {
         Player aPlayer = this.getCurrentPlayer();
         if (table.isPlacePiece(aPlayer, aColumn, aRow)) {
+            // System.out.println("ok");
             aPlayer.placePiece(aColumn, aRow);
-            if (isEnd())
-                this.changeWinPlayer();
-            else
-                this.changePlayer();
+            this.tableJuge();
         }
         return;
+    }
+
+    public void tableJuge() {
+        if (table.getEmptyCount() == 0) {
+            this.gameJuge();
+        }
+        this.changPlayer();
+        this.playerJuge();
+        return;
+    }
+
+    public void playerJuge() {
+        Integer current = index;
+        while (!this.isCurrentPlayerPlacePieces()) {
+            this.changPlayer();
+            if (current == index) {
+                this.gameJuge();
+                return;
+            }
+        }
+        this.game();
+        return;
+    }
+
+    public void changPlayer(){
+        index = (index + 1) % players.size();
+        return;
+    }
+
+    public void gameJuge() {
+        List<Integer> aList = new ArrayList<>();
+        players.forEach(item -> aList.add(item.getCount()));
+        Optional<Integer> max = aList.stream().max(Integer::compareTo);
+        index = aList.indexOf(max.get());
+        placePiece = false;
+        end = true;
+        return;
+    }
+
+    /**
+     * ゲームの終了に応答する。
+     */
+    public Boolean isEnd() {
+        if (end == true)
+            return true;
+        if (table.getEmptyCount() == 0)
+            return true;
+        return false;
     }
 
     /**
@@ -100,38 +158,7 @@ public class Judge extends Object {
         return players.get(index + 1);
     }
 
-    /**
-     * ゲームの終了に応答する。
-     */
-    public Boolean isEnd() {
-        if (end == true)
-            return true;
-        if (table.getEmptyCount() == 0)
-            return true;
-        return false;
-    }
-
-    /**
-     * ジャッジが見てるプレイヤーを変更する。
-     */
-    public void changePlayer() {
-        index++;
-        if (index == players.size())
-            index = 0;
-        Integer current = index;
-        while (!isPlayerPlacePiece()) {
-            index++;
-            if (index == players.size())
-                index = 0;
-            if (current == index) {
-                this.changeWinPlayer();
-                return;
-            }
-        }
-        return;
-    }
-
-    public Boolean isPlayerPlacePiece() {
+    public Boolean isCurrentPlayerPlacePieces() {
         Player aPlayer = this.getCurrentPlayer();
         List<Grid> grids = table.getGrids();
         for (Grid aGrid : grids) {
@@ -139,19 +166,6 @@ public class Judge extends Object {
                 return true;
         }
         return false;
-    }
-
-    /**
-     * ジャッジが勝利したプレイヤーを見る。
-     */
-    public void changeWinPlayer() {
-        List<Integer> aList = new ArrayList<>();
-        players.forEach(item -> aList.add(item.getCount()));
-        Optional<Integer> max = aList.stream().max(Integer::compareTo);
-        index = aList.indexOf(max.get());
-        placePiece = false;
-        end = true;
-        return;
     }
 
     /**
@@ -179,6 +193,10 @@ public class Judge extends Object {
      */
     public Boolean getPlacePiece() {
         return placePiece;
+    }
+
+    public Boolean setPlacePiece(Boolean aBoolean) {
+        return placePiece = aBoolean;
     }
 
     /**

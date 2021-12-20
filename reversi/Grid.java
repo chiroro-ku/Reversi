@@ -146,6 +146,10 @@ public class Grid extends Object {
         return nextGrids.indexOf(aGrid);
     }
 
+    public Integer getIndex(){
+        return index;
+    }
+
     /**
      * グリッドの駒の配置の可不可を応答する。
      * @return 配置の可不可

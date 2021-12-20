@@ -3,14 +3,14 @@ package reversi;
 import java.awt.Color;
 
 public class Player extends Object {
-    private static Integer number = 1;
-    private Table table;
-    private Piece piece;
-    private String name;
-    private Color viewColor;
+    protected static Integer number = 1;
+    protected Table table;
+    protected Piece piece;
+    protected String name;
+    protected Color viewColor;
 
-    public Player(Table aBoard, String aName) {
-        table = aBoard;
+    public Player(Table aTable, String aName) {
+        table = aTable;
         piece = new Piece(number++);
         name = aName;
         this.initialize();
@@ -20,9 +20,9 @@ public class Player extends Object {
     public void initialize() {
         Integer aColor = piece.getColor();
         if (aColor == 1)
-            viewColor = Color.BLACK;
-        else if (aColor == 2)
             viewColor = Color.WHITE;
+        else if (aColor == 2)
+            viewColor = Color.BLACK;
         else {
             int r = (int) (Math.random() * 256);
             int g = (int) (Math.random() * 256);
@@ -89,5 +89,9 @@ public class Player extends Object {
     public void setTable(Table aTable){
         table = aTable;
         return;
+    }
+
+    public Boolean isComputer(){
+        return false;
     }
 }

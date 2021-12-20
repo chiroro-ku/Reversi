@@ -9,9 +9,11 @@ public class Example extends Object {
         Integer aMaxColumn = 8;
         Integer aMaxRow = 8;
         Table aTable = new Table(aMaxColumn, aMaxRow);
-        Player aPlayerA = new Player(aTable, "1");
-        Player aPlayerB = new Player(aTable, "2");
-        List<Player> players = new ArrayList<>(Arrays.asList(aPlayerA,aPlayerB));
+        Player playerA = new Player(aTable, "1");
+        // // Player playerB = new Player(aTable, "2");
+        // Computer playerA = new Computer(aTable);
+        Computer playerB = new Computer(aTable);
+        List<Player> players = new ArrayList<>(Arrays.asList(playerA,playerB));
         Judge aJudge = new Judge(aTable, players);
         Model aModel = new Model(aJudge,"Reversi",true);
 

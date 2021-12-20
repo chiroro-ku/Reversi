@@ -123,9 +123,10 @@ public class Model {
         Integer index = view.getIndex(aPoint);
         if (index >= 0) {
             Table aTable = this.getTable();
-            String aName = String.valueOf(judge.getPlayersNumber() + 1);
-            Player aPlayer = new Player(aTable, aName);
-            judge.addPlayer(aPlayer);
+            // String aName = String.valueOf(judge.getPlayersNumber() + 1);
+            // Player aPlayer = new Player(aTable, aName);
+            Computer aComputer = new Computer(aTable);
+            judge.addPlayer(aComputer);
             view.updata();
         } else {
             playerSetting = false;
@@ -167,6 +168,8 @@ public class Model {
             view.updata();
         } else {
             gridSetting = false;
+            judge.game();
+            view.updata();
             this.update();
         }
         return;
@@ -187,10 +190,11 @@ public class Model {
         Integer aGridWidth = aTableWidth / aMaxColumn;
         Integer aColumn = y / aGridWidth;
         Integer aRow = x / aGridWidth;
-        if (aTable.isTable(aColumn, aRow))
-            judge.placePieceAction(aColumn, aRow);
-        else
-            judge.changePlayer();
+        if (aTable.isTable(aColumn, aRow)) {
+            judge.placePiece(aColumn, aRow);
+        } else {
+            judge.tableJuge();
+        }
         this.update();
         view.updata();
         return;

@@ -153,6 +153,28 @@ public class Table extends Object {
 
     /**
      * 
+     * @param aPlayer
+     * @param aColumn
+     * @param aRow
+     * @return
+     */
+    public Boolean isPlacePiece(Player aPlayer, Integer i) {
+        Integer aColor = aPlayer.getColor();
+        Grid aGrid = grids.get(i);
+        if(!aGrid.isPlacePiece()) return false;
+        Integer index = 0;
+        for (Grid aNextGrid : aGrid.getNextGrids()) {
+            Integer aGridColor = aNextGrid.getPieceColor();
+            if (aGridColor > 0 && aGridColor != aColor && isPlacePieceColumn(aColor, aNextGrid.getNextGrid(index), index))
+                return true;
+            else
+                index++;
+        }
+        return false;
+    }
+
+    /**
+     * 
      * @param aColor
      * @param aGrid
      * @param index
