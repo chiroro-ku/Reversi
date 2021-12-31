@@ -1,284 +1,384 @@
 package reversi;
 
-import java.awt.Point;
-import java.awt.Dimension;
-import java.awt.Toolkit;
 import java.util.List;
 
-import javax.swing.JFrame;
-
 /**
- * モデル：描画する文字列を表現するモデルである。
+ * モデル：ゲーム情報を握っている。
  */
-public class Model {
+public class Model extends Object {
 
     /**
-     * 描画する文字列を束縛するフィールドである。
-     */
-    public View view;
-
-    /**
-     * 描画する文字列のフォントサイズ群を定数として束縛しておくフィールドである。
+     * 制御を扱うコントローラーのインスタンスを束縛する。
      */
     public Controller controller;
 
     /**
-     * 盤面とプレイヤーを束縛したフィールドである。
+     * 表示を司るビューのインスタンスを束縛する。
      */
-    private Judge judge;
+    public View view;
 
     /**
-     * 盤面の設定の可不可を束縛する。
+     * ゲームのインスタンスを束縛する。
      */
-    private Boolean tableSetting;
+    private Game game;
 
     /**
-     * プレイヤー設定の可不可を束縛する。
+     * 表示するテキストデータを束縛している。
      */
-    private Boolean playerSetting;
+    private String text;
 
     /**
-     * グリッドの設定の可不可を束縛する。
+     * テーブル設定の可不可を束縛している。
      */
-    private Boolean gridSetting;
+    private Boolean settingTable;
 
     /**
-     * ウィンドウのフレームを束縛する。
+     * プレイヤー設定の可不可を束縛している。
      */
-    private JFrame window;
+    private Boolean settingPlayer;
 
     /**
-     * ウィンドウのフレームタイトルを束縛する。フレームタイトルをテキストとして利用する。
+     * グリッド設定の可不可を束縛している。
      */
-    private String title;
+    private Boolean settingGrid;
 
     /**
-     * コンストラクトである。ジャッジとフレームのタイトルを設定する。
+     * 駒の配置の可不可を束縛している。
+     */
+    private Boolean placePiece;
+
+    /**
+     * ゲーム終了の是非を束縛している。
+     */
+    private Boolean gameEnd;
+
+    /**
+     * モデルのインスタンスである。ゲームを設定し、MVCモデルを構築する。
      * 
-     * @param aJudge ジャッジのインスタンス
-     * @param aTitle フレームタイトル
+     * @param aGame ゲームのインスタンス
      */
-    public Model(Judge aJudge, String aTitle) {
-        judge = aJudge;
-        tableSetting = true;
-        playerSetting = true;
-        gridSetting = true;
-        title = aTitle;
+    public Model(Game aGame) {
+
+        // ゲームを設定する。
+        this.game = aGame;
+
+        // 初期化する。
+        initialize();
+
+        // MVCモデルを構築する。
+        this.view = new View(this);
+        this.controller = new Controller(this, view);
         return;
     }
 
-    public Model(Judge aJudge, String aTitle, Boolean aBoolean) {
-        judge = aJudge;
-        tableSetting = aBoolean;
-        playerSetting = aBoolean;
-        gridSetting = aBoolean;
-        title = aTitle;
-        return;
-    }
-
+    /**
+     * モデルを初期化する。
+     */
     public void initialize() {
+
+        // テキストを初期化する。
+        this.text = "";
+
+        // 設定の可不可を初期化する。
+        this.settingTable = true;
+        this.settingPlayer = true;
+        this.settingGrid = true;
+        this.placePiece = true;
+        this.gameEnd = false;
+
         return;
     }
 
     /**
-     * MVC（モデル・ビュー・コントローラ）を構築して、ウィンドウを表示する。
+     * ゲームの設定を変更する。
      */
-    public void open() {
-        view = new View(this);
-        controller = new Controller(this);
-        window = new JFrame(title);
-        window.add(view);
-        Dimension aDimension = new Dimension(800, 600);
-        window.setSize(aDimension);
-        window.setMinimumSize(aDimension);
-        window.setResizable(true);
-        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        Integer x = (screenSize.width / 2) - (aDimension.width / 2);
-        Integer y = (screenSize.height / 2) - (aDimension.height / 2);
-        window.setLocation(x, y);
-        window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        window.addNotify();
-        window.setVisible(true);
-        window.toFront();
-        this.update();
-        return;
-    }
+    public void gameSetting() {
+        if (settingTable) // テーブル設定
+            text = " - Setting - Table";
+        else if (settingPlayer) // プレイヤー設定
+            text = " - Setting - Player";
+        else if (settingGrid) // グリッドの設定
+            text = " - Setting - Grid";
+        else if (gameEnd) // ゲームの終了設定
+            text = " - Game - win - " + game.getWinPlayer().getName();
+        else // ゲーム設定
+            text = " - Game - " + game.getCurrentPlayer().getName();
 
-    public void tableSettring(Point aPoint) {
-        Integer index = view.getIndex(aPoint);
-        if (index >= 0) {
-            Table aTable = this.getTable();
-            Integer aMaxColumn = aTable.getMaxColumn();
-            Integer aMaxRow = aTable.getMaxRow();
-            judge.setTable(new Table(aMaxColumn + 1, aMaxRow + 1));
-            view.updata();
-        } else {
-            tableSetting = false;
-            this.update();
-        }
-        return;
-    }
-
-    public void playerSetting(Point aPoint) {
-        Integer index = view.getIndex(aPoint);
-        if (index >= 0) {
-            Table aTable = this.getTable();
-            // String aName = String.valueOf(judge.getPlayersNumber() + 1);
-            // Player aPlayer = new Player(aTable, aName);
-            Computer aComputer = new Computer(aTable);
-            judge.addPlayer(aComputer);
-            view.updata();
-        } else {
-            playerSetting = false;
-            judge.prepare();
-            view.updata();
-            this.update();
-        }
+        // テキストの更新
+        view.updateText();
         return;
     }
 
     /**
-     * 行と列からグリッドの設定を変更する。
+     * 新しいテーブルを作成する。
+     */
+    public void newGameTable() {
+        game.newTable();
+        return;
+    }
+
+    /**
+     * プレイヤーを追加する。
+     */
+    public void addPlayer() {
+        game.addPlayer();
+        return;
+    }
+
+    /**
+     * グリッドの初期設定を変更する。
      * 
-     * @param aColumn 列
-     * @param aRow    行
+     * @param aColumn クリックされた座標の列
+     * @param aRow    クリックされた座標の行
      */
-    public void gridSetting(Point aPoint) {
-        Integer index = view.getIndex(aPoint);
-        if (index >= 0) {
-            Table aTable = this.getTable();
-            Grid aGrid = aTable.getGrid(index);
-            Piece aPiece = aGrid.getPiece();
-            Integer aColor = aPiece.getColor();
-            if (aColor == aTable.getEmptyPiece().getColor()) {
-                aPiece = judge.getPlayer(aColor + 1).getPiece();
-                aGrid.setPiece(aPiece);
-                aGrid.setPlacePiece(false);
-            } else if (aColor == judge.getPlayersNumber()) {
-                aPiece = aTable.getWallGrid().getPiece();
-                aGrid.setPiece(aPiece);
-            } else if (aColor > 0) {
-                aPiece = judge.getPlayer(aColor + 1).getPiece();
-                aGrid.setPiece(aPiece);
-            } else {
-                aPiece = aTable.getEmptyPiece();
-                aGrid.setPiece(aPiece);
-                aGrid.setPlacePiece(true);
-            }
-            view.updata();
-        } else {
-            gridSetting = false;
-            judge.game();
-            view.updata();
-            this.update();
-        }
+    public void settingGrid(Integer aColumn, Integer aRow) {
+
+        // クリックされたグリッドと駒を取得する。
+        Table table = game.getTable();
+        Grid aGrid = table.getGrid(aColumn, aRow);
+        Piece aPiece = aGrid.getPiece();
+
+        // プレイヤー全員の情報を取得する。
+        List<Player> players = game.getPlayers();
+
+        if (aPiece.equals(players.get(players.size() - 1).getPiece())) // 駒から空のグリッドに取得する。
+            aGrid.setPiece(table.getEmpty());
+        else if (aPiece.equals(table.getEmpty())) // 空のグリッドから駒に変更する。
+            aGrid.placePiece(table.getWall().getPiece());
+        else if (aPiece.getColor() >= players.get(0).getPiece().getColor()) // 次のプレイヤーに変更する。
+            aGrid.placePiece(players.get(aPiece.getColor()).getPiece());
+        else if (aPiece.equals(table.getWall().getPiece())) // 壁のグリッドから駒に変更する。
+            aGrid.placePiece(players.get(0).getPiece());
+
+        return;
+    }
+
+    // テーブルの設定を決定する。
+    public void settingTableEnd() {
+        settingTable = false;
+        gameSetting();
+        return;
+    }
+
+    /** 
+     * プレイヤーの設定を決定する。
+     */
+    public void settingPlayerEnd() {
+
+        // 設定を変更する。
+        settingPlayer = false;
+        gameSetting();
+
+        // ゲームの準備をする。
+        game.prepare();
+
         return;
     }
 
     /**
-     * 行と列から駒を配置する。
-     * 
-     * @param aColumn 列
-     * @param aRow    行
+     * グリッドの設定を決定する。
      */
-    public void placePiece(Point aPoint) {
-        int x = (int) aPoint.getX();
-        int y = (int) aPoint.getY();
-        Table aTable = this.getTable();
-        Integer aMaxColumn = aTable.getMaxColumn();
-        Integer aTableWidth = view.getTableWidth();
-        Integer aGridWidth = aTableWidth / aMaxColumn;
-        Integer aColumn = y / aGridWidth;
-        Integer aRow = x / aGridWidth;
-        if (aTable.isTable(aColumn, aRow)) {
-            judge.placePiece(aColumn, aRow);
-        } else {
-            judge.tableJuge();
-        }
-        this.update();
+    public void settingGridEnd() {
+        settingGrid = false;
+        gameSetting();
+        return;
+    }
+
+    /**
+     * ゲームを開始する。
+     */ 
+    public void gameStart() {
+
+        // ゲームの準備して、ビューを更新する。
+        game.prepare();
         view.updata();
+
+        // コンピュータの初手を実行する。
+        computerPlacePiece();
+
         return;
     }
 
     /**
-     * テキストを設定する。
-     * フレームタイトルの変更をしている。
+     * クリックされた座標に駒を配置する。
      * 
-     * @param aText テキスト
+     * @param aColumn 座標の列
+     * @param aRow    座標の行
      */
-    public void setText(String aText) {
-        String aString = title + " - " + aText;
-        window.setTitle(aString);
+    public void placePiece(Integer aColumn, Integer aRow) {
+
+        // テーブルの情報を取得する
+        Table table = game.getTable();
+        Integer maxColumn = table.getMaxColumn();
+        Integer maxRow = table.getMaxRow();
+
+        if (aColumn >= maxColumn || aRow >= maxRow) { // パス
+
+            // 次のプレイヤーに変更する。
+            game.nextPlayerIndex();
+
+        } else {
+
+            // 駒を配置する。
+            game.placePiece(aColumn, aRow);
+
+            // ビューを更新する。
+            view.updata();
+
+            // ゲームの状況を更新する
+            Judge();
+        }
+
         return;
     }
 
     /**
-     * ジャッジに応答する。
-     * 
-     * @return ジャッジ
+     * コンピューターの駒を配置する。
      */
-    public Judge getJudge() {
-        return judge;
+    public void computerPlacePiece() {
+
+        // プレイヤーがコンピュータの間、駒の配置を実行する。
+        while (game.getCurrentPlayer().isComputer()) {
+
+            // プレイヤーの駒の配置を不可にする。
+            placePiece = false;
+
+            // コンピュータに駒を配置させる。
+            game.computerPlacePiece();
+
+            // ビューを更新する。
+            view.updata();
+
+            if (Judge()) // ゲームの状況を更新する。
+                return; // ゲームが終了した時、プログラムを抜ける。
+        }
+
+        // プレイヤーの駒の配置を可能にする。
+        placePiece = true;
+
+        return;
     }
 
     /**
-     * テーブルに応答する。
+     * 新しいゲームを作成する。
+     */
+    public void restartGame() {
+        game = new Game(game.getName());
+        gameEnd = false;
+        return;
+    }
+
+    /**
+     * テーブルの状況を更新する。ゲームの終了を判断する。
+     * 
+     * @return ゲームの終了
+     */
+    public Boolean Judge() {
+
+        // ゲームの状態を取得する。
+        Boolean aBoolean = game.isEnd();
+
+        if (aBoolean) { // ゲームの終了処理
+
+            // 駒の配置を不可にして、ゲームを終了させる
+            placePiece = false;
+            gameEnd = true;
+            gameSetting();
+
+            // テキストを更新する。
+            view.updateText();
+        }
+
+        return aBoolean;
+    }
+
+    /**
+     * 表示するテキストデータに応答する。
+     * 
+     * @return テキスト
+     */
+    public String getText() {
+        return game.getName() + text;
+    }
+
+    /**
+     * ゲームのインスタンスに応答する。
+     * 
+     * @return ゲームのインスタンス
+     */
+    public Game getGame() {
+        return game;
+    }
+
+    /**
+     * ゲームが束縛しているテーブルのインスタンスに応答する。
+     * 
+     * @return テーブルのインスタンス
+     */
+    public Table getGameTable() {
+        return game.getTable();
+    }
+
+    /**
+     * ゲームが束縛しているプレイヤーのインスタンスに応答する。
      * 
      * @return テーブル
      */
-    public Table getTable() {
-        return judge.getTable();
-    }
-
-    public Boolean getTableSetting() {
-        return tableSetting;
-    }
-
-    public Boolean getPlayerSetting() {
-        return playerSetting;
+    public List<Player> getGamePlayers() {
+        return game.getPlayers();
     }
 
     /**
-     * グリッドの設定の可不可を応答する。
+     * テーブルが束縛しているグリッドのリストに応答する。
      * 
-     * @return 可不可
+     * @return プレイヤーのリスト
      */
-    public Boolean getGridSetting() {
-        return gridSetting;
+    public List<Grid> getGameTableGrids() {
+        return getGameTable().getGrids();
     }
 
     /**
-     * 駒の配置の可不可を応答する。
+     * テーブル設定の可不可に応答する。
      * 
-     * @return 可不可
+     * @return 設定変更の可不可
      */
-    public Boolean getPlacePiece() {
-        return judge.getPlacePiece();
+    public Boolean isSettingTable() {
+        return settingTable;
     }
 
     /**
-     * デバック用。駒の数と空のグリッドの数を出力する。
+     * プレイヤー設定の可不可に応答する。
+     * 
+     * @return 設定変更の可不可
      */
-    public void tablePrint() {
-        List<Player> aList = judge.getPlayers();
-        aList.forEach(item -> System.out.print(item.getName() + item.getPiece().getCount() + " "));
-        Table aTable = this.getTable();
-        System.out.print("e" + aTable.getEmptyPiece().getCount());
-        System.out.println();
-        return;
+    public Boolean isSettingPlayer() {
+        return settingPlayer;
     }
 
-    public void update() {
-        if (tableSetting)
-            this.setText("Table - Setting");
-        else if (playerSetting)
-            this.setText("Player - Setting");
-        else if (gridSetting)
-            this.setText("Grid - Setting");
-        else if (judge.getPlacePiece())
-            this.setText("Game - " + judge.getCurrentPlayer().getName());
-        else if (judge.isEnd())
-            this.setText("Game - Win - " + judge.getCurrentPlayer().getName());
-        return;
+    /**
+     * グリッド設定の可不可に応答する。
+     * 
+     * @return 設定変更の可不可
+     */
+    public Boolean isSettingGrid() {
+        return settingGrid;
+    }
+
+    /**
+     * 駒の配置の可不可に応答する。
+     * 
+     * @return 配置の可不可
+     */
+    public Boolean isPlacePiece() {
+        return placePiece;
+    }
+
+    /**
+     * ゲームの状態に応答する。
+     * 
+     * @return 終了の是非
+     */
+    public Boolean isGameEnd() {
+        return gameEnd;
     }
 }

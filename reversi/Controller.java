@@ -20,35 +20,107 @@ public class Controller extends MouseInputAdapter {
     public View view;
 
     /**
-     * コンストラクトである。モデルを設定し、MVC（モデル・ビュー・コントローラ）を構築する。
+     * コントローラーのインスタンスである。モデルとビューを設定する。
      * 
-     * @param aModel モデルのインスタンス
+     * @param aModel
+     * @param view
      */
-    public Controller(Model aModel) {
-        model = aModel;
-        view = aModel.view;
-        view.controller = this;
-        view.addMouseListener(this);
-        view.addMouseMotionListener(this);
-        view.addMouseWheelListener(this);
+    public Controller(Model aModel, View view) {
+
+        // MVCモデルの構築する。
+        this.model = aModel;
+        this.view = view;
+
+        // ビューにコントローラーを設定する。
+        this.view.addMouseListener(this);
+        this.view.addMouseMotionListener(this);
+        this.view.addMouseWheelListener(this);
+
         return;
     }
 
     /**
-     * 指定されたマウスイベントからクリックされた位置からグリッドを計算して処理を行う。
+     * 指定されたマウスイベントから、クリックされた座標を計算して処理を行う。
      * 
      * @param aMouseEvent マウスイベント
      */
     public synchronized void mouseClicked(MouseEvent aMouseEvent) {
+
+        // クリックされた座標を取得する。
         Point aPoint = aMouseEvent.getPoint();
-        if (model.getTableSetting()) {
-            model.tableSettring(aPoint);
-        } else if (model.getPlayerSetting()) {
-            model.playerSetting(aPoint);
-        } else if (model.getGridSetting()){
-            model.gridSetting(aPoint);
-        }else if (model.getPlacePiece()) {
-            model.placePiece(aPoint);
+        int x = (int) aPoint.getX();
+        int y = (int) aPoint.getY();
+
+        // テーブルの幅とグリッドの幅を取得する。
+        Integer aTableWidth = view.getTableWidth();
+        Integer aGridWidth = view.getGridWidth();
+
+        // クリックされたグリッドの行と列を計算する。
+        Integer aColumn = x / aGridWidth;
+        Integer aRow = y / aGridWidth;
+
+        if (model.isSettingTable()) { // テーブルの設定変更。
+            if (x < aTableWidth && y < aTableWidth) {
+
+                // 新しいテーブルの設定。
+                model.newGameTable();
+                view.updata();
+
+            } else {
+
+                // テーブルの設定を決定する。
+                model.settingTableEnd();
+
+            }
+        } else if (model.isSettingPlayer()) { // プレイヤーの設定変更。
+            if (x < aTableWidth && y < aTableWidth) {
+
+                // プレイヤーを追加する。
+                model.addPlayer();
+
+            } else {
+
+                // プレイヤーの設定を決定する。
+                model.settingPlayerEnd();
+
+            }
+
+            // 設定の更新
+            view.updata();
+
+        } else if (model.isSettingGrid()) { // グリッドの設定変更
+            if (x < aTableWidth && y < aTableWidth) {
+
+                // グリッドの初期状態を変更する。
+                model.settingGrid(aColumn, aRow);
+                view.updata();
+
+            } else {
+
+                // グリッドの設定を決定する。
+                model.settingGridEnd();
+                model.gameStart();
+
+            }
+        } else if (model.isPlacePiece()) { // プレイヤーの行動。
+
+            // 駒の配置、パスを実行する。
+            model.placePiece(aColumn, aRow);
+
+            // コンピュータに駒を配置させる。
+            model.computerPlacePiece();
+
+        } else if (model.isGameEnd()) { // ゲームのリスタート。
+            if (x > aTableWidth || y > aTableWidth) {
+
+                // 新しいゲームを設定する。
+                model.restartGame();
+                model.initialize();
+                model.gameSetting();
+
+                // ビューの更新
+                view.updata();
+            }
         }
         return;
     }

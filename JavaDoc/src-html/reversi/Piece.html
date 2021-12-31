@@ -15,44 +15,54 @@
 <span class="source-line-no">002</span><span id="line.2"></span>
 <span class="source-line-no">003</span><span id="line.3">import java.awt.Color;</span>
 <span class="source-line-no">004</span><span id="line.4"></span>
-<span class="source-line-no">005</span><span id="line.5">public class Piece extends Object{</span>
-<span class="source-line-no">006</span><span id="line.6">    private Integer color;</span>
-<span class="source-line-no">007</span><span id="line.7">    private Integer count;</span>
-<span class="source-line-no">008</span><span id="line.8">    private Color viewColor;</span>
-<span class="source-line-no">009</span><span id="line.9"></span>
-<span class="source-line-no">010</span><span id="line.10">    public Piece(Integer aColor){</span>
-<span class="source-line-no">011</span><span id="line.11">        color = aColor;</span>
-<span class="source-line-no">012</span><span id="line.12">        count = 0;</span>
-<span class="source-line-no">013</span><span id="line.13">        return;</span>
-<span class="source-line-no">014</span><span id="line.14">    }</span>
-<span class="source-line-no">015</span><span id="line.15"></span>
-<span class="source-line-no">016</span><span id="line.16">    public void setViewColor(Color aColor){</span>
-<span class="source-line-no">017</span><span id="line.17">        viewColor = aColor;</span>
-<span class="source-line-no">018</span><span id="line.18">        return;</span>
-<span class="source-line-no">019</span><span id="line.19">    }</span>
-<span class="source-line-no">020</span><span id="line.20"></span>
-<span class="source-line-no">021</span><span id="line.21">    public Color getViewColor(){</span>
-<span class="source-line-no">022</span><span id="line.22">        return viewColor;</span>
-<span class="source-line-no">023</span><span id="line.23">    }</span>
-<span class="source-line-no">024</span><span id="line.24"></span>
-<span class="source-line-no">025</span><span id="line.25">    public Integer getColor(){</span>
-<span class="source-line-no">026</span><span id="line.26">        return color;</span>
-<span class="source-line-no">027</span><span id="line.27">    }</span>
-<span class="source-line-no">028</span><span id="line.28"></span>
-<span class="source-line-no">029</span><span id="line.29">    public void increment(){</span>
-<span class="source-line-no">030</span><span id="line.30">        count++;</span>
-<span class="source-line-no">031</span><span id="line.31">        return;</span>
-<span class="source-line-no">032</span><span id="line.32">    }</span>
-<span class="source-line-no">033</span><span id="line.33"></span>
-<span class="source-line-no">034</span><span id="line.34">    public void decrement(){</span>
-<span class="source-line-no">035</span><span id="line.35">        count--;</span>
-<span class="source-line-no">036</span><span id="line.36">        return;</span>
-<span class="source-line-no">037</span><span id="line.37">    }</span>
-<span class="source-line-no">038</span><span id="line.38"></span>
-<span class="source-line-no">039</span><span id="line.39">    public Integer getCount(){</span>
-<span class="source-line-no">040</span><span id="line.40">        return count;</span>
-<span class="source-line-no">041</span><span id="line.41">    }</span>
-<span class="source-line-no">042</span><span id="line.42">}</span>
+<span class="source-line-no">005</span><span id="line.5">import javax.swing.plaf.ColorUIResource;</span>
+<span class="source-line-no">006</span><span id="line.6"></span>
+<span class="source-line-no">007</span><span id="line.7">public class Piece extends Object {</span>
+<span class="source-line-no">008</span><span id="line.8">    private Integer color;</span>
+<span class="source-line-no">009</span><span id="line.9">    private Integer number;</span>
+<span class="source-line-no">010</span><span id="line.10">    private Color uiColor;</span>
+<span class="source-line-no">011</span><span id="line.11"></span>
+<span class="source-line-no">012</span><span id="line.12">    public Piece(Integer color){</span>
+<span class="source-line-no">013</span><span id="line.13">        this.color = color;</span>
+<span class="source-line-no">014</span><span id="line.14">        this.number = 0;</span>
+<span class="source-line-no">015</span><span id="line.15">        this.uiColor = uiColorRandom();</span>
+<span class="source-line-no">016</span><span id="line.16">        return;</span>
+<span class="source-line-no">017</span><span id="line.17">    }</span>
+<span class="source-line-no">018</span><span id="line.18"></span>
+<span class="source-line-no">019</span><span id="line.19">    public Color uiColorRandom() {</span>
+<span class="source-line-no">020</span><span id="line.20">        if (color == 1)</span>
+<span class="source-line-no">021</span><span id="line.21">            return Color.WHITE;</span>
+<span class="source-line-no">022</span><span id="line.22">        if (color == 2)</span>
+<span class="source-line-no">023</span><span id="line.23">            return Color.BLACK;</span>
+<span class="source-line-no">024</span><span id="line.24">        int r = (int) (Math.random() * 256);</span>
+<span class="source-line-no">025</span><span id="line.25">        int g = (int) (Math.random() * 256);</span>
+<span class="source-line-no">026</span><span id="line.26">        int b = (int) (Math.random() * 256);</span>
+<span class="source-line-no">027</span><span id="line.27">        Color color = new ColorUIResource(r, g, b);</span>
+<span class="source-line-no">028</span><span id="line.28">        return color;</span>
+<span class="source-line-no">029</span><span id="line.29">    }</span>
+<span class="source-line-no">030</span><span id="line.30"></span>
+<span class="source-line-no">031</span><span id="line.31">    public void increase() {</span>
+<span class="source-line-no">032</span><span id="line.32">        this.number++;</span>
+<span class="source-line-no">033</span><span id="line.33">        return;</span>
+<span class="source-line-no">034</span><span id="line.34">    }</span>
+<span class="source-line-no">035</span><span id="line.35"></span>
+<span class="source-line-no">036</span><span id="line.36">    public void decrease() {</span>
+<span class="source-line-no">037</span><span id="line.37">        this.number--;</span>
+<span class="source-line-no">038</span><span id="line.38">        return;</span>
+<span class="source-line-no">039</span><span id="line.39">    }</span>
+<span class="source-line-no">040</span><span id="line.40"></span>
+<span class="source-line-no">041</span><span id="line.41">    public Integer getColor() {</span>
+<span class="source-line-no">042</span><span id="line.42">        return color;</span>
+<span class="source-line-no">043</span><span id="line.43">    }</span>
+<span class="source-line-no">044</span><span id="line.44"></span>
+<span class="source-line-no">045</span><span id="line.45">    public Integer getNumber() {</span>
+<span class="source-line-no">046</span><span id="line.46">        return number;</span>
+<span class="source-line-no">047</span><span id="line.47">    }</span>
+<span class="source-line-no">048</span><span id="line.48"></span>
+<span class="source-line-no">049</span><span id="line.49">    public Color getUIColor(){</span>
+<span class="source-line-no">050</span><span id="line.50">        return uiColor;</span>
+<span class="source-line-no">051</span><span id="line.51">    }</span>
+<span class="source-line-no">052</span><span id="line.52">}</span>
 
 
 

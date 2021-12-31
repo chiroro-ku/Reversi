@@ -3,166 +3,82 @@ package reversi;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * グリッド：盤面の一つのマス目。
- */
 public class Grid extends Object {
-
-    /**
-     * グリッドに配置されている駒を掌握している。
-     */
-    private Piece piece;
-
-    /**
-     * 盤面で管理されてるインデックスを掌握している。
-     */
     private Integer index;
-
-    /**
-     * 駒の配置の可不可を掌握している。
-     */
+    private Piece piece;
+    private List<Grid> nextGrids;
+    private Integer column;
+    private Integer row;
     private Boolean placePiece;
 
-    /**
-     * 隣の周囲のグリッドを掌握している。
-     */
-    private List<Grid> nextGrids;
-
-    /**
-     * 盤面で管理されている列を掌握している。
-     */
-    private Integer column;
-
-    /**
-     * 盤面で管理されている行を掌握している。
-     */
-    private Integer row;
-
-    /**
-     * コンストラクトである。グリッドの色状態を設定する。
-     * @param aPiece グリッドに配置する駒
-     * @param aInteger 管理番号、インデックス
-     */
-    public Grid(Piece aPiece,Integer aInteger) {
-        piece = aPiece;
-        aPiece.increment();
-        index = aInteger;
-        placePiece = true;
-        nextGrids = new ArrayList<>();
+    public Grid(Integer index,Piece piece,Integer column,Integer row){
+        this.index = index;
+        this.setPiece(piece);
+        this.nextGrids = new ArrayList<>();
+        this.column = column;
+        this.row = row;
+        this.placePiece = true;
         return;
     }
 
-    /**
-     * コンストラクトである。表示しない壁の仮想のグリッドをコンストラクトする。
-     * @param aPiece 壁のグリッドに配置する駒
-     */
-    public Grid(Piece aPiece) {
-        piece = aPiece;
-        placePiece = false;
+    public Grid(Piece piece){
+        this.index = -1;
+        this.setPiece(piece);
+        this.placePiece = false;
         return;
     }
 
-    /**
-     * グリッドの初期化。列と行をグリッドに設定する。
-     * @param maxColumn
-     */
-    public void initialize(Integer maxColumn) {
-        row = index / maxColumn;
-        column = index - (row * maxColumn);
+    public Boolean isWallGrid(){
+        if(piece.getColor() < 0)
+            return true;
+        return false;
+    }
+
+    public void initialize(List<Grid> next){
+        this.nextGrids = next;
         return;
     }
 
-    /**
-     * 隣の周囲のグリッドを設定する。
-     * @param aSetNextGrids
-     */
-    public void setNextGrids(List<Grid> aSetNextGrids) {
-        nextGrids = aSetNextGrids;
+    public void placePiece(Piece aPiece){
+        this.piece.decrease();
+        this.piece = aPiece;
+        this.piece.increase();
+        this.placePiece = false;
         return;
     }
 
-    /**
-     * 駒をグリッドに配置する。
-     */
-    public void setPiece(Piece aPiece) {
-        piece.decrement();
-        piece = aPiece;
-        piece.increment();
-        placePiece = false;
+    public void setPiece(Piece piece){
+        this.piece = piece;
+        this.piece.increase();
+        this.placePiece = true;
         return;
-    }
-
-    /**
-     * グリッドに配置されている駒を応答する。
-     * @return 駒
-     */
-    public Piece getPiece() {
-        return piece;
-    }
-
-    /**
-     * グリッドに配置されている駒の色を応答する。
-     * @return 駒の色
-     */
-    public Integer getPieceColor() {
-        return piece.getColor();
-    }
-
-    /**
-     * グリッドの列を応答する。
-     */
-    public Integer getColumn() {
-        return column;
-    }
-
-    /**
-     * グリッドの行を応答する。
-     */
-    public Integer getRow() {
-        return row;
-    }
-
-    /**
-     * 隣の周囲のグリッドを応答する。
-     * @return グリッドのリスト
-     */
-    public List<Grid> getNextGrids(){
-        return nextGrids;
-    }
-
-    /**
-     * インデックスから隣のグリッドを応答する。
-     * @return グリッド
-     */
-    public Grid getNextGrid(Integer index){
-        return nextGrids.get(index);
-    }
-
-    /**
-     * グリッドからインデックスを応答する。
-     * @return インデックス
-     */
-    public Integer getNextGridIndex(Grid aGrid){
-        return nextGrids.indexOf(aGrid);
     }
 
     public Integer getIndex(){
         return index;
     }
 
-    /**
-     * グリッドの駒の配置の可不可を応答する。
-     * @return 配置の可不可
-     */
-    public Boolean isPlacePiece(){
-        return placePiece;
+    public Integer getColumn(){
+        return column;
     }
 
-    /**
-     * グリッドに駒の配置の可不可を設定する。
-     */
-    public void setPlacePiece(Boolean aBoolean){
-        placePiece = aBoolean;
-        return;
+    public Integer getRow(){
+        return row;
+    }
+
+    public List<Grid> getNextGrids(){
+        return nextGrids;
+    }
+
+    public Grid getNextGrid(Integer index){
+        return nextGrids.get(index);
+    }
+
+    public Piece getPiece(){
+        return piece;
+    }
+
+    public Boolean isPlacePiece(){
+        return placePiece;
     }
 }
