@@ -1,34 +1,148 @@
 package reversi;
 
-import java.awt.Point;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import java.awt.Dimension;
+import java.awt.Toolkit;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.util.List;
-import javax.swing.JPanel;
 
 /**
- * ビュー：ウィンドウの中に配置するコンポーネントの一種である。
+ * ビュー：ウィンドウの中に配置する、表示を司るコンポーネントの一種である。
  */
 @SuppressWarnings("serial")
 public class View extends JPanel {
 
     /**
-     * モデルを束縛するフィールドである。
+     * 情報を握っているモデルのインスタンスを束縛する。
      */
     public Model model;
 
     /**
-     * コントローラを束縛するフィールドである。
+     * 自身を配置するウィンドウのインスタンスを束縛する。
      */
-    public Controller controller;
+    private JFrame window;
 
     /**
-     * コンストラクトである。モデルを設定する。
+     * ビューのインスタンスである。モデルを設定する。
      * 
      * @param aModel モデルのインスタンス
      */
     public View(Model aModel) {
-        model = aModel;
+
+        // パラメータを設定する。
+        this.model = aModel;
+        this.window = new JFrame();
+
+        // 初期化する。
+        this.initialize();
+
+        return;
+    }
+
+    /**
+     * ウィンドウの初期化。
+     */
+    public void initialize() {
+
+        // ウィンドウを初期化して自身を追加する。
+        window.add(this);
+        Dimension aDimension = new Dimension(800, 600);
+        window.setSize(aDimension);
+        window.setMinimumSize(aDimension);
+        window.setResizable(true);
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        Integer x = (screenSize.width / 2) - (aDimension.width / 2);
+        Integer y = (screenSize.height / 2) - (aDimension.height / 2);
+        window.setLocation(x, y);
+        window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        window.addNotify();
+        window.setVisible(true);
+        window.toFront();
+
+        // テキストを更新する。
+        updateText();
+        return;
+    }
+
+    /**
+     * テキストを更新する。
+     */
+    public void updateText() {
+        window.setTitle(model.getText());
+        return;
+    }
+
+    /**
+     * 指定されたグラフィックスに対して、テーブルとプレイヤーを描画する。
+     * 
+     * @param aGraphics グラフィックスコンテキスト
+     */
+    public void paintComponent(Graphics aGraphics) {
+        Integer gridWidth = getGridWidth();
+        List<Grid> grids = model.getGameTableGrids();
+        grids.stream().filter(item -> (!item.isWallGrid())).forEach(item -> paintGrid(aGraphics, item, gridWidth));
+        List<Player> players = model.getGamePlayers();
+        players.forEach(item -> paintPiece(aGraphics, item.getPiece(), model.getGameTable().getMaxColumn() * gridWidth,
+                (item.getIndex() - 1) * gridWidth, gridWidth));
+        paintPiece(aGraphics, model.getGame().getCurrentPlayer().getPiece(),
+                model.getGameTable().getMaxColumn() * gridWidth,
+                (model.getGameTable().getMaxRow() - 1) * gridWidth, gridWidth);
+        return;
+    }
+
+    /**
+     * 指定されたグラフィックスに対して、グリッドを描画する。
+     * 
+     * @param aGraphics グラフィックスコンテキスト
+     * @param aGrid     描画するグリッド
+     * @param width     グリッドの幅
+     */
+    public void paintGrid(Graphics aGraphics, Grid aGrid, Integer width) {
+
+        // グリッドの行と列を取得する。
+        Integer aColumn = aGrid.getColumn();
+        Integer aRow = aGrid.getRow();
+
+        // 描画座標を計算する。
+        Integer x = aColumn * width;
+        Integer y = aRow * width;
+
+        // グリッドの背景を描画する。
+        aGraphics.setColor(Color.GREEN);
+        aGraphics.fillRect(x, y, width, width);
+
+        // グリッドの枠を描画する。
+        aGraphics.setColor(Color.BLACK);
+        aGraphics.drawRect(x, y, width, width);
+
+        // 駒を描画する。
+        Piece aPiece = aGrid.getPiece();
+        if (aPiece.getColor() > 0) // グリッドに駒がある場合
+            paintPiece(aGraphics, aPiece, x, y, width);
+
+        return;
+    }
+
+    /**
+     * 指定されたグラフィックスに対して、駒を描画する。
+     * 
+     * @param aGraphics グラフィックスコンテキスト
+     * @param aPiece    描画する駒
+     * @param x         描画するx座標
+     * @param y         描画するy座標
+     * @param width     駒の幅
+     */
+    public void paintPiece(Graphics aGraphics, Piece aPiece, Integer x, Integer y, Integer width) {
+
+        // 駒の情報を取得する
+        Color color = aPiece.getUIColor();
+
+        // 駒を描画する。
+        aGraphics.setColor(color);
+        aGraphics.fillOval(x, y, width, width);
+
         return;
     }
 
@@ -41,85 +155,29 @@ public class View extends JPanel {
     }
 
     /**
-     * 指定されたグラフィックスに対して、盤面とプレイヤを描画する。
+     * テーブルの幅に応答する。
      * 
-     * @param aGraphics グラフィックスコンテキスト
-     */
-    public void paintComponent(Graphics aGraphics) {
-        Integer aTableWidth = this.getHeight();
-        Table aTable = model.getTable();
-        List<Grid> grids = aTable.getGrids();
-        Integer maxColumn = aTable.getMaxColumn();
-        Integer maxRow = aTable.getMaxRow();
-        Integer gridWidth = aTableWidth / maxColumn;
-        List<Player> players = model.getJudge().getPlayers();
-        players.forEach(item -> paintPiece(aGraphics, item.getViewColor(), maxColumn * gridWidth,
-                (item.getColor() - 1) * gridWidth, gridWidth));
-        paintPiece(aGraphics, model.getJudge().getCurrentPlayer().getViewColor(), maxColumn * gridWidth,
-                (maxRow - 1) * gridWidth, gridWidth);
-        grids.stream().filter(item -> item.getPieceColor() >= 0).forEach(item -> paintGrid(aGraphics, item, gridWidth));
-        return;
-    }
-
-    /**
-     * 一つのグリッドを描画する。
-     * 
-     * @param aGraphics グラフィックスコンテキスト
-     * @param aGrid     グリッド
-     * @param width     グリッドを描画するときの幅
-     */
-    public void paintGrid(Graphics aGraphics, Grid aGrid, Integer width) {
-        Integer aColumn = aGrid.getColumn();
-        Integer aRow = aGrid.getRow();
-        Integer x = aRow * width;
-        Integer y = aColumn * width;
-        aGraphics.setColor(Color.GREEN);
-        aGraphics.fillRect(x, y, width, width);
-        aGraphics.setColor(Color.BLACK);
-        aGraphics.drawRect(x, y, width, width);
-        if (!aGrid.isPlacePiece())
-            paintPiece(aGraphics, aGrid.getPiece().getViewColor(), x, y, width);
-    }
-
-    /**
-     * 一つの駒を描画する。
-     * 
-     * @param aGraphics グラフィックスコンテキスト
-     * @param aColor    駒の色
-     * @param x         駒を描画するときのx座標
-     * @param y         駒を描画するときのy座標
-     * @param width     駒の幅
-     */
-    public void paintPiece(Graphics aGraphics, Color aColor, Integer x, Integer y, Integer width) {
-        aGraphics.setColor(aColor);
-        aGraphics.fillOval(x, y, width, width);
-        return;
-    }
-
-    /**
-     * 盤面全体の幅に応答する。
-     * 
-     * @return 盤面全体の幅
+     * @return テーブルの幅
      */
     public Integer getTableWidth() {
         return this.getHeight();
     }
 
-    public Integer getIndex(Point aPoint) {
-        Integer index;
-        Integer aTableWidth = this.getTableWidth();
-        int x = (int) aPoint.getX();
-        int y = (int) aPoint.getY();
-        if (x >= aTableWidth|| y >= aTableWidth) {
-            index = -1;
-        } else {
-            Table aTable = model.getTable();
-            Integer aMaxColumn = aTable.getMaxColumn();
-            Integer aGridWidth = aTableWidth / aMaxColumn;
-            Integer aColumn = y / aGridWidth;
-            Integer aRow = x / aGridWidth;
-            index = aTable.getIndex(aColumn, aRow);
-        }
-        return index;
+    /**
+     * テーブルの情報から、グリッドの幅を応答する。
+     * 
+     * @return グリッドの幅
+     */
+    public Integer getGridWidth() {
+
+        // テーブルの情報を取得する。
+        Table aTable = model.getGameTable();
+        Integer aTableWidth = this.getHeight();
+
+        // グリッドの幅を計算する。
+        Integer maxColumn = aTable.getMaxColumn();
+        Integer width = aTableWidth / maxColumn;
+
+        return width;
     }
 }

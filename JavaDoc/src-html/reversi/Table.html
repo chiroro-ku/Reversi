@@ -18,202 +18,199 @@
 <span class="source-line-no">005</span><span id="line.5">import java.util.List;</span>
 <span class="source-line-no">006</span><span id="line.6">import java.util.stream.IntStream;</span>
 <span class="source-line-no">007</span><span id="line.7"></span>
-<span class="source-line-no">008</span><span id="line.8">/**</span>
-<span class="source-line-no">009</span><span id="line.9"> * 盤面：グリッド全体のデータを持っている。</span>
-<span class="source-line-no">010</span><span id="line.10"> */</span>
-<span class="source-line-no">011</span><span id="line.11">public class Table extends Object {</span>
-<span class="source-line-no">012</span><span id="line.12"></span>
-<span class="source-line-no">013</span><span id="line.13">    /**</span>
-<span class="source-line-no">014</span><span id="line.14">     * 盤面の列の長さ。</span>
-<span class="source-line-no">015</span><span id="line.15">     */</span>
-<span class="source-line-no">016</span><span id="line.16">    private Integer maxColumn;</span>
-<span class="source-line-no">017</span><span id="line.17"></span>
-<span class="source-line-no">018</span><span id="line.18">    /**</span>
-<span class="source-line-no">019</span><span id="line.19">     * 盤面全体の行の長さ。</span>
-<span class="source-line-no">020</span><span id="line.20">     */</span>
-<span class="source-line-no">021</span><span id="line.21">    private Integer maxRow;</span>
-<span class="source-line-no">022</span><span id="line.22"></span>
-<span class="source-line-no">023</span><span id="line.23">    /**</span>
-<span class="source-line-no">024</span><span id="line.24">     * 壁のグリッド。</span>
-<span class="source-line-no">025</span><span id="line.25">     */</span>
-<span class="source-line-no">026</span><span id="line.26">    private Grid wall;</span>
-<span class="source-line-no">027</span><span id="line.27"></span>
-<span class="source-line-no">028</span><span id="line.28">    /**</span>
-<span class="source-line-no">029</span><span id="line.29">     * 空のグリッドの配置する駒。</span>
-<span class="source-line-no">030</span><span id="line.30">     */</span>
-<span class="source-line-no">031</span><span id="line.31">    private Piece empty;</span>
-<span class="source-line-no">032</span><span id="line.32"></span>
-<span class="source-line-no">033</span><span id="line.33">    /**</span>
-<span class="source-line-no">034</span><span id="line.34">     * グリッド全体を掌握している。</span>
-<span class="source-line-no">035</span><span id="line.35">     */</span>
-<span class="source-line-no">036</span><span id="line.36">    private List&lt;Grid&gt; grids;</span>
-<span class="source-line-no">037</span><span id="line.37"></span>
-<span class="source-line-no">038</span><span id="line.38">    /**</span>
-<span class="source-line-no">039</span><span id="line.39">     * 盤面のベクトル値。</span>
-<span class="source-line-no">040</span><span id="line.40">     */</span>
-<span class="source-line-no">041</span><span id="line.41">    private List&lt;Integer&gt; direction;</span>
+<span class="source-line-no">008</span><span id="line.8">public class Table extends Object {</span>
+<span class="source-line-no">009</span><span id="line.9">    private Integer maxColumn;</span>
+<span class="source-line-no">010</span><span id="line.10">    private Integer maxRow;</span>
+<span class="source-line-no">011</span><span id="line.11">    private List&lt;Grid&gt; grids;</span>
+<span class="source-line-no">012</span><span id="line.12">    private Grid wall;</span>
+<span class="source-line-no">013</span><span id="line.13">    private Piece empty;</span>
+<span class="source-line-no">014</span><span id="line.14">    private List&lt;Integer&gt; direction;</span>
+<span class="source-line-no">015</span><span id="line.15"></span>
+<span class="source-line-no">016</span><span id="line.16">    public Table(Integer maxColumn, Integer maxRow) {</span>
+<span class="source-line-no">017</span><span id="line.17">        this.maxColumn = maxColumn;</span>
+<span class="source-line-no">018</span><span id="line.18">        this.maxRow = maxRow;</span>
+<span class="source-line-no">019</span><span id="line.19">        this.grids = new ArrayList&lt;&gt;();</span>
+<span class="source-line-no">020</span><span id="line.20">        this.wall = new Grid(new Piece(-1));</span>
+<span class="source-line-no">021</span><span id="line.21">        this.empty = new Piece(0);</span>
+<span class="source-line-no">022</span><span id="line.22">        this.direction = new ArrayList&lt;&gt;(</span>
+<span class="source-line-no">023</span><span id="line.23">                Arrays.asList(getDirectionUp(), getDirectionRight(), getDirectionDown(), getDirectionLeft(),</span>
+<span class="source-line-no">024</span><span id="line.24">                        getDirectionUpRight(), getDirectionUpLeft(), getDirectionDownRight(), getDirectionDownLeft()));</span>
+<span class="source-line-no">025</span><span id="line.25">        initialize();</span>
+<span class="source-line-no">026</span><span id="line.26">        return;</span>
+<span class="source-line-no">027</span><span id="line.27">    }</span>
+<span class="source-line-no">028</span><span id="line.28"></span>
+<span class="source-line-no">029</span><span id="line.29">    public void initialize() {</span>
+<span class="source-line-no">030</span><span id="line.30">        IntStream.range(0, maxColumn * maxRow).forEach(i -&gt; grids.add(new Grid(i, empty, gridColumn(i), gridRow(i))));</span>
+<span class="source-line-no">031</span><span id="line.31">        grids.forEach(item -&gt; item.initialize(nextGrids(item)));</span>
+<span class="source-line-no">032</span><span id="line.32">        return;</span>
+<span class="source-line-no">033</span><span id="line.33">    }</span>
+<span class="source-line-no">034</span><span id="line.34"></span>
+<span class="source-line-no">035</span><span id="line.35">    public Integer gridColumn(Integer index) {</span>
+<span class="source-line-no">036</span><span id="line.36">        return index % maxColumn;</span>
+<span class="source-line-no">037</span><span id="line.37">    }</span>
+<span class="source-line-no">038</span><span id="line.38"></span>
+<span class="source-line-no">039</span><span id="line.39">    public Integer gridRow(Integer index) {</span>
+<span class="source-line-no">040</span><span id="line.40">        return index / maxRow;</span>
+<span class="source-line-no">041</span><span id="line.41">    }</span>
 <span class="source-line-no">042</span><span id="line.42"></span>
-<span class="source-line-no">043</span><span id="line.43">    /**</span>
-<span class="source-line-no">044</span><span id="line.44">     * コンストラクトである。盤面の列の長さと、行の長さを設定して盤面をコンストラクトする。</span>
-<span class="source-line-no">045</span><span id="line.45">     * @param aMaxColumn 列の長さ</span>
-<span class="source-line-no">046</span><span id="line.46">     * @param aMaxRow 行の長さ</span>
-<span class="source-line-no">047</span><span id="line.47">     */</span>
-<span class="source-line-no">048</span><span id="line.48">    public Table(Integer aMaxColumn, Integer aMaxRow) {</span>
-<span class="source-line-no">049</span><span id="line.49">        maxColumn = aMaxColumn;</span>
-<span class="source-line-no">050</span><span id="line.50">        maxRow = aMaxRow;</span>
-<span class="source-line-no">051</span><span id="line.51">        direction = Arrays.asList(-maxColumn, 1, maxColumn, -1, -maxColumn - 1, -maxColumn + 1, maxColumn + 1,</span>
-<span class="source-line-no">052</span><span id="line.52">                maxColumn - 1);</span>
-<span class="source-line-no">053</span><span id="line.53">        this.initialize();</span>
-<span class="source-line-no">054</span><span id="line.54">        return;</span>
-<span class="source-line-no">055</span><span id="line.55">    }</span>
-<span class="source-line-no">056</span><span id="line.56"></span>
-<span class="source-line-no">057</span><span id="line.57">    /**</span>
-<span class="source-line-no">058</span><span id="line.58">     * グリッドのコンストラクト、初期化を行う。</span>
-<span class="source-line-no">059</span><span id="line.59">     */</span>
-<span class="source-line-no">060</span><span id="line.60">    public void initialize() {</span>
-<span class="source-line-no">061</span><span id="line.61">        wall = new Grid(new Piece(-1));</span>
-<span class="source-line-no">062</span><span id="line.62">        empty = new Piece(0);</span>
-<span class="source-line-no">063</span><span id="line.63">        grids = new ArrayList&lt;&gt;();</span>
-<span class="source-line-no">064</span><span id="line.64">        IntStream.range(0, maxColumn * maxRow).forEach(i -&gt; grids.add(new Grid(empty,i)));</span>
-<span class="source-line-no">065</span><span id="line.65">        grids.forEach(item -&gt; {</span>
-<span class="source-line-no">066</span><span id="line.66">            item.initialize(maxColumn);</span>
-<span class="source-line-no">067</span><span id="line.67">            item.setNextGrids(nextGridList(item));</span>
-<span class="source-line-no">068</span><span id="line.68">        });</span>
-<span class="source-line-no">069</span><span id="line.69">        return;</span>
+<span class="source-line-no">043</span><span id="line.43">    public List&lt;Grid&gt; nextGrids(Grid aGrid) {</span>
+<span class="source-line-no">044</span><span id="line.44">        List&lt;Grid&gt; aList = new ArrayList&lt;&gt;();</span>
+<span class="source-line-no">045</span><span id="line.45">        direction.forEach(item -&gt; aList.add(nextGrid(aGrid, item)));</span>
+<span class="source-line-no">046</span><span id="line.46">        return aList;</span>
+<span class="source-line-no">047</span><span id="line.47">    }</span>
+<span class="source-line-no">048</span><span id="line.48"></span>
+<span class="source-line-no">049</span><span id="line.49">    public Grid nextGrid(Grid aGrid, Integer directionIndex) {</span>
+<span class="source-line-no">050</span><span id="line.50">        Integer index = aGrid.getIndex() + directionIndex;</span>
+<span class="source-line-no">051</span><span id="line.51">        if (isWall(aGrid, directionIndex))</span>
+<span class="source-line-no">052</span><span id="line.52">            return wall;</span>
+<span class="source-line-no">053</span><span id="line.53">        return grids.get(index);</span>
+<span class="source-line-no">054</span><span id="line.54">    }</span>
+<span class="source-line-no">055</span><span id="line.55"></span>
+<span class="source-line-no">056</span><span id="line.56">    public Boolean isWall(Grid aGrid, Integer nextGridIndex) {</span>
+<span class="source-line-no">057</span><span id="line.57">        Integer endGridColumn = maxColumn - 1;</span>
+<span class="source-line-no">058</span><span id="line.58">        Integer endGridRow = maxRow - 1;</span>
+<span class="source-line-no">059</span><span id="line.59">        Integer column = aGrid.getColumn();</span>
+<span class="source-line-no">060</span><span id="line.60">        Integer row = aGrid.getRow();</span>
+<span class="source-line-no">061</span><span id="line.61">        if (column == 0 &amp;&amp; isDirectionLeft(nextGridIndex))</span>
+<span class="source-line-no">062</span><span id="line.62">            return true;</span>
+<span class="source-line-no">063</span><span id="line.63">        if (column == endGridColumn &amp;&amp; isDirectionRight(nextGridIndex))</span>
+<span class="source-line-no">064</span><span id="line.64">            return true;</span>
+<span class="source-line-no">065</span><span id="line.65">        if (row == 0 &amp;&amp; isDirectionUp(nextGridIndex))</span>
+<span class="source-line-no">066</span><span id="line.66">            return true;</span>
+<span class="source-line-no">067</span><span id="line.67">        if (row == endGridRow &amp;&amp; isDirectionDown(nextGridIndex))</span>
+<span class="source-line-no">068</span><span id="line.68">            return true;</span>
+<span class="source-line-no">069</span><span id="line.69">        return false;</span>
 <span class="source-line-no">070</span><span id="line.70">    }</span>
 <span class="source-line-no">071</span><span id="line.71"></span>
-<span class="source-line-no">072</span><span id="line.72">    /**</span>
-<span class="source-line-no">073</span><span id="line.73">     * 与えられたグリッドの周囲のグリッドに応答する。</span>
-<span class="source-line-no">074</span><span id="line.74">     * @param aGrid</span>
-<span class="source-line-no">075</span><span id="line.75">     * @return グリッドのリスト</span>
-<span class="source-line-no">076</span><span id="line.76">     */</span>
-<span class="source-line-no">077</span><span id="line.77">    public List&lt;Grid&gt; nextGridList(Grid aGrid) {</span>
-<span class="source-line-no">078</span><span id="line.78">        List&lt;Grid&gt; aList = new ArrayList&lt;&gt;();</span>
-<span class="source-line-no">079</span><span id="line.79">        Integer index = grids.indexOf(aGrid);</span>
-<span class="source-line-no">080</span><span id="line.80">        direction.forEach(item -&gt; {</span>
-<span class="source-line-no">081</span><span id="line.81">            if (isEndGrid(aGrid, item))</span>
-<span class="source-line-no">082</span><span id="line.82">                aList.add(wall);</span>
-<span class="source-line-no">083</span><span id="line.83">            else</span>
-<span class="source-line-no">084</span><span id="line.84">                aList.add(grids.get(index + item));</span>
-<span class="source-line-no">085</span><span id="line.85">        });</span>
-<span class="source-line-no">086</span><span id="line.86">        return aList;</span>
-<span class="source-line-no">087</span><span id="line.87">    }</span>
-<span class="source-line-no">088</span><span id="line.88"></span>
-<span class="source-line-no">089</span><span id="line.89">    /**</span>
-<span class="source-line-no">090</span><span id="line.90">     * 端のグリッドの判断をする。</span>
-<span class="source-line-no">091</span><span id="line.91">     */</span>
-<span class="source-line-no">092</span><span id="line.92">    public Boolean isEndGrid(Grid aGrid, Integer aDirection) {</span>
-<span class="source-line-no">093</span><span id="line.93">        if (aGrid.getColumn() == 0</span>
-<span class="source-line-no">094</span><span id="line.94">                &amp;&amp; (aDirection == -maxColumn - 1 || aDirection == -1 || aDirection == maxColumn - 1))</span>
-<span class="source-line-no">095</span><span id="line.95">            return true;</span>
-<span class="source-line-no">096</span><span id="line.96">        if (aGrid.getColumn() == maxColumn - 1</span>
-<span class="source-line-no">097</span><span id="line.97">                &amp;&amp; (aDirection == -maxColumn + 1 || aDirection == 1 || aDirection == maxColumn + 1))</span>
-<span class="source-line-no">098</span><span id="line.98">            return true;</span>
-<span class="source-line-no">099</span><span id="line.99">        if (aGrid.getRow() == 0</span>
-<span class="source-line-no">100</span><span id="line.100">                &amp;&amp; (aDirection == -maxColumn - 1 || aDirection == -maxColumn || aDirection == -maxColumn + 1))</span>
-<span class="source-line-no">101</span><span id="line.101">            return true;</span>
-<span class="source-line-no">102</span><span id="line.102">        if (aGrid.getRow() == maxRow - 1</span>
-<span class="source-line-no">103</span><span id="line.103">                &amp;&amp; (aDirection == maxColumn - 1 || aDirection == maxColumn || aDirection == maxColumn + 1))</span>
-<span class="source-line-no">104</span><span id="line.104">            return true;</span>
-<span class="source-line-no">105</span><span id="line.105">        return false;</span>
-<span class="source-line-no">106</span><span id="line.106">    }</span>
-<span class="source-line-no">107</span><span id="line.107"></span>
-<span class="source-line-no">108</span><span id="line.108">    /**</span>
-<span class="source-line-no">109</span><span id="line.109">     * 駒の配置の可不可を判断する。</span>
-<span class="source-line-no">110</span><span id="line.110">     */</span>
-<span class="source-line-no">111</span><span id="line.111">    public Boolean isPlacePiece(Player aPlayer, Integer aColumn, Integer aRow) {</span>
-<span class="source-line-no">112</span><span id="line.112">        Integer aColor = aPlayer.getColor();</span>
-<span class="source-line-no">113</span><span id="line.113">        Grid aGrid = this.getGrid(aColumn, aRow);</span>
-<span class="source-line-no">114</span><span id="line.114">        if(!aGrid.isPlacePiece()) return false;</span>
-<span class="source-line-no">115</span><span id="line.115">        Integer index = 0;</span>
-<span class="source-line-no">116</span><span id="line.116">        for (Grid aNextGrid : aGrid.getNextGrids()) {</span>
-<span class="source-line-no">117</span><span id="line.117">            Integer aGridColor = aNextGrid.getPieceColor();</span>
-<span class="source-line-no">118</span><span id="line.118">            if (aGridColor &gt; 0 &amp;&amp; aGridColor != aColor &amp;&amp; isPlacePieceColumn(aColor, aNextGrid.getNextGrid(index), index))</span>
-<span class="source-line-no">119</span><span id="line.119">                return true;</span>
-<span class="source-line-no">120</span><span id="line.120">            else</span>
-<span class="source-line-no">121</span><span id="line.121">                index++;</span>
-<span class="source-line-no">122</span><span id="line.122">        }</span>
-<span class="source-line-no">123</span><span id="line.123">        return false;</span>
-<span class="source-line-no">124</span><span id="line.124">    }</span>
-<span class="source-line-no">125</span><span id="line.125"></span>
-<span class="source-line-no">126</span><span id="line.126">    /**</span>
-<span class="source-line-no">127</span><span id="line.127">     * 駒の配置を可不可を列をみて判断する。</span>
-<span class="source-line-no">128</span><span id="line.128">     */</span>
-<span class="source-line-no">129</span><span id="line.129">    public Boolean isPlacePieceColumn(Integer aColor, Grid aGrid, Integer index) {</span>
-<span class="source-line-no">130</span><span id="line.130">        Integer aGridColor = aGrid.getPieceColor();</span>
-<span class="source-line-no">131</span><span id="line.131">        if (aGridColor &lt;= 0)</span>
-<span class="source-line-no">132</span><span id="line.132">            return false;</span>
-<span class="source-line-no">133</span><span id="line.133">        if (aGridColor == aColor)</span>
-<span class="source-line-no">134</span><span id="line.134">            return true;</span>
-<span class="source-line-no">135</span><span id="line.135">        return isPlacePieceColumn(aColor, aGrid.getNextGrid(index), index);</span>
-<span class="source-line-no">136</span><span id="line.136">    }</span>
-<span class="source-line-no">137</span><span id="line.137"></span>
-<span class="source-line-no">138</span><span id="line.138">    /**</span>
-<span class="source-line-no">139</span><span id="line.139">     * 列と行からグリッドを応答する。</span>
-<span class="source-line-no">140</span><span id="line.140">     * @param aColumn</span>
-<span class="source-line-no">141</span><span id="line.141">     * @param aRow</span>
-<span class="source-line-no">142</span><span id="line.142">     * @return グリッド</span>
-<span class="source-line-no">143</span><span id="line.143">     */</span>
-<span class="source-line-no">144</span><span id="line.144">    public Grid getGrid(Integer aColumn, Integer aRow) {</span>
-<span class="source-line-no">145</span><span id="line.145">        Integer index = this.getIndex(aColumn, aRow);</span>
-<span class="source-line-no">146</span><span id="line.146">        return grids.get(index);</span>
-<span class="source-line-no">147</span><span id="line.147">    }</span>
-<span class="source-line-no">148</span><span id="line.148"></span>
-<span class="source-line-no">149</span><span id="line.149">    /**</span>
-<span class="source-line-no">150</span><span id="line.150">     * 列と行からグリッドのインデックスを応答する。</span>
-<span class="source-line-no">151</span><span id="line.151">     * @param グリッドリストのインデックス</span>
-<span class="source-line-no">152</span><span id="line.152">     */</span>
-<span class="source-line-no">153</span><span id="line.153">    public Integer getIndex(Integer aColumn, Integer aRow) {</span>
-<span class="source-line-no">154</span><span id="line.154">        return aColumn + (aRow * maxColumn);</span>
-<span class="source-line-no">155</span><span id="line.155">    }</span>
-<span class="source-line-no">156</span><span id="line.156"></span>
-<span class="source-line-no">157</span><span id="line.157">    /**</span>
-<span class="source-line-no">158</span><span id="line.158">     * 空きグリッドの数を応答する。</span>
-<span class="source-line-no">159</span><span id="line.159">     * @return 個数</span>
-<span class="source-line-no">160</span><span id="line.160">     */</span>
-<span class="source-line-no">161</span><span id="line.161">    public Integer getEmptyCount(){</span>
-<span class="source-line-no">162</span><span id="line.162">        return empty.getCount();</span>
+<span class="source-line-no">072</span><span id="line.72">    public Integer getDirectionUp() {</span>
+<span class="source-line-no">073</span><span id="line.73">        return -maxColumn;</span>
+<span class="source-line-no">074</span><span id="line.74">    }</span>
+<span class="source-line-no">075</span><span id="line.75"></span>
+<span class="source-line-no">076</span><span id="line.76">    public Integer getDirectionDown() {</span>
+<span class="source-line-no">077</span><span id="line.77">        return maxColumn;</span>
+<span class="source-line-no">078</span><span id="line.78">    }</span>
+<span class="source-line-no">079</span><span id="line.79"></span>
+<span class="source-line-no">080</span><span id="line.80">    public Integer getDirectionRight() {</span>
+<span class="source-line-no">081</span><span id="line.81">        return 1;</span>
+<span class="source-line-no">082</span><span id="line.82">    }</span>
+<span class="source-line-no">083</span><span id="line.83"></span>
+<span class="source-line-no">084</span><span id="line.84">    public Integer getDirectionLeft() {</span>
+<span class="source-line-no">085</span><span id="line.85">        return -1;</span>
+<span class="source-line-no">086</span><span id="line.86">    }</span>
+<span class="source-line-no">087</span><span id="line.87"></span>
+<span class="source-line-no">088</span><span id="line.88">    public Integer getDirectionUpRight() {</span>
+<span class="source-line-no">089</span><span id="line.89">        return getDirectionUp() + getDirectionRight();</span>
+<span class="source-line-no">090</span><span id="line.90">    }</span>
+<span class="source-line-no">091</span><span id="line.91"></span>
+<span class="source-line-no">092</span><span id="line.92">    public Integer getDirectionUpLeft() {</span>
+<span class="source-line-no">093</span><span id="line.93">        return getDirectionUp() + getDirectionLeft();</span>
+<span class="source-line-no">094</span><span id="line.94">    }</span>
+<span class="source-line-no">095</span><span id="line.95"></span>
+<span class="source-line-no">096</span><span id="line.96">    public Integer getDirectionDownRight() {</span>
+<span class="source-line-no">097</span><span id="line.97">        return getDirectionDown() + getDirectionRight();</span>
+<span class="source-line-no">098</span><span id="line.98">    }</span>
+<span class="source-line-no">099</span><span id="line.99"></span>
+<span class="source-line-no">100</span><span id="line.100">    public Integer getDirectionDownLeft() {</span>
+<span class="source-line-no">101</span><span id="line.101">        return getDirectionDown() + getDirectionLeft();</span>
+<span class="source-line-no">102</span><span id="line.102">    }</span>
+<span class="source-line-no">103</span><span id="line.103"></span>
+<span class="source-line-no">104</span><span id="line.104">    public Boolean isDirectionUp(Integer index) {</span>
+<span class="source-line-no">105</span><span id="line.105">        if (index == getDirectionUp())</span>
+<span class="source-line-no">106</span><span id="line.106">            return true;</span>
+<span class="source-line-no">107</span><span id="line.107">        if (index == getDirectionUpRight())</span>
+<span class="source-line-no">108</span><span id="line.108">            return true;</span>
+<span class="source-line-no">109</span><span id="line.109">        if (index == getDirectionUpLeft())</span>
+<span class="source-line-no">110</span><span id="line.110">            return true;</span>
+<span class="source-line-no">111</span><span id="line.111">        return false;</span>
+<span class="source-line-no">112</span><span id="line.112">    }</span>
+<span class="source-line-no">113</span><span id="line.113"></span>
+<span class="source-line-no">114</span><span id="line.114">    public Boolean isDirectionRight(Integer index) {</span>
+<span class="source-line-no">115</span><span id="line.115">        if (index == getDirectionRight())</span>
+<span class="source-line-no">116</span><span id="line.116">            return true;</span>
+<span class="source-line-no">117</span><span id="line.117">        if (index == getDirectionUpRight())</span>
+<span class="source-line-no">118</span><span id="line.118">            return true;</span>
+<span class="source-line-no">119</span><span id="line.119">        if (index == getDirectionDownRight())</span>
+<span class="source-line-no">120</span><span id="line.120">            return true;</span>
+<span class="source-line-no">121</span><span id="line.121">        return false;</span>
+<span class="source-line-no">122</span><span id="line.122">    }</span>
+<span class="source-line-no">123</span><span id="line.123"></span>
+<span class="source-line-no">124</span><span id="line.124">    public Boolean isDirectionDown(Integer index) {</span>
+<span class="source-line-no">125</span><span id="line.125">        if (index == getDirectionDown())</span>
+<span class="source-line-no">126</span><span id="line.126">            return true;</span>
+<span class="source-line-no">127</span><span id="line.127">        if (index == getDirectionDownRight())</span>
+<span class="source-line-no">128</span><span id="line.128">            return true;</span>
+<span class="source-line-no">129</span><span id="line.129">        if (index == getDirectionDownLeft())</span>
+<span class="source-line-no">130</span><span id="line.130">            return true;</span>
+<span class="source-line-no">131</span><span id="line.131">        return false;</span>
+<span class="source-line-no">132</span><span id="line.132">    }</span>
+<span class="source-line-no">133</span><span id="line.133"></span>
+<span class="source-line-no">134</span><span id="line.134">    public Boolean isDirectionLeft(Integer index) {</span>
+<span class="source-line-no">135</span><span id="line.135">        if (index == getDirectionLeft())</span>
+<span class="source-line-no">136</span><span id="line.136">            return true;</span>
+<span class="source-line-no">137</span><span id="line.137">        if (index == getDirectionUpLeft())</span>
+<span class="source-line-no">138</span><span id="line.138">            return true;</span>
+<span class="source-line-no">139</span><span id="line.139">        if (index == getDirectionDownLeft())</span>
+<span class="source-line-no">140</span><span id="line.140">            return true;</span>
+<span class="source-line-no">141</span><span id="line.141">        return false;</span>
+<span class="source-line-no">142</span><span id="line.142">    }</span>
+<span class="source-line-no">143</span><span id="line.143"></span>
+<span class="source-line-no">144</span><span id="line.144">    public List&lt;Grid&gt; getGrids() {</span>
+<span class="source-line-no">145</span><span id="line.145">        return grids;</span>
+<span class="source-line-no">146</span><span id="line.146">    }</span>
+<span class="source-line-no">147</span><span id="line.147"></span>
+<span class="source-line-no">148</span><span id="line.148">    public Integer getMaxColumn(){</span>
+<span class="source-line-no">149</span><span id="line.149">        return maxColumn;</span>
+<span class="source-line-no">150</span><span id="line.150">    }</span>
+<span class="source-line-no">151</span><span id="line.151"></span>
+<span class="source-line-no">152</span><span id="line.152">    public Integer getMaxRow(){</span>
+<span class="source-line-no">153</span><span id="line.153">        return maxRow;</span>
+<span class="source-line-no">154</span><span id="line.154">    }</span>
+<span class="source-line-no">155</span><span id="line.155"></span>
+<span class="source-line-no">156</span><span id="line.156">    public Grid getGrid(Integer aColumn,Integer aRow){</span>
+<span class="source-line-no">157</span><span id="line.157">        Integer index = gridsIndex(aColumn, aRow);</span>
+<span class="source-line-no">158</span><span id="line.158">        return grids.get(index);</span>
+<span class="source-line-no">159</span><span id="line.159">    }</span>
+<span class="source-line-no">160</span><span id="line.160"></span>
+<span class="source-line-no">161</span><span id="line.161">    public Integer gridsIndex(Integer aColumn,Integer aRow){</span>
+<span class="source-line-no">162</span><span id="line.162">        return (aRow * maxColumn) + aColumn;</span>
 <span class="source-line-no">163</span><span id="line.163">    }</span>
 <span class="source-line-no">164</span><span id="line.164"></span>
-<span class="source-line-no">165</span><span id="line.165">    /**</span>
-<span class="source-line-no">166</span><span id="line.166">     * 壁のグリッドを応答する。</span>
-<span class="source-line-no">167</span><span id="line.167">     * @return 壁グリッド</span>
-<span class="source-line-no">168</span><span id="line.168">     */</span>
-<span class="source-line-no">169</span><span id="line.169">    public Grid getWallGrid(){</span>
+<span class="source-line-no">165</span><span id="line.165">    public Piece getEmpty(){</span>
+<span class="source-line-no">166</span><span id="line.166">        return empty;</span>
+<span class="source-line-no">167</span><span id="line.167">    }</span>
+<span class="source-line-no">168</span><span id="line.168"></span>
+<span class="source-line-no">169</span><span id="line.169">    public Grid getWall(){</span>
 <span class="source-line-no">170</span><span id="line.170">        return wall;</span>
 <span class="source-line-no">171</span><span id="line.171">    }</span>
 <span class="source-line-no">172</span><span id="line.172"></span>
-<span class="source-line-no">173</span><span id="line.173">    /**</span>
-<span class="source-line-no">174</span><span id="line.174">     * 空のグリッドに配置される駒を応答する。</span>
-<span class="source-line-no">175</span><span id="line.175">     * @return 空の駒</span>
-<span class="source-line-no">176</span><span id="line.176">     */</span>
-<span class="source-line-no">177</span><span id="line.177">    public Piece getEmptyPiece(){</span>
-<span class="source-line-no">178</span><span id="line.178">        return empty;</span>
-<span class="source-line-no">179</span><span id="line.179">    }</span>
-<span class="source-line-no">180</span><span id="line.180"></span>
-<span class="source-line-no">181</span><span id="line.181">    /**</span>
-<span class="source-line-no">182</span><span id="line.182">     * 列の長さを応答する。</span>
-<span class="source-line-no">183</span><span id="line.183">     * @return 列の長さ</span>
-<span class="source-line-no">184</span><span id="line.184">     */</span>
-<span class="source-line-no">185</span><span id="line.185">    public Integer getMaxColumn() {</span>
-<span class="source-line-no">186</span><span id="line.186">        return maxColumn;</span>
-<span class="source-line-no">187</span><span id="line.187">    }</span>
-<span class="source-line-no">188</span><span id="line.188"></span>
-<span class="source-line-no">189</span><span id="line.189">    /**</span>
-<span class="source-line-no">190</span><span id="line.190">     * 行の長さを応答する。</span>
-<span class="source-line-no">191</span><span id="line.191">     * @return 行の長さ</span>
-<span class="source-line-no">192</span><span id="line.192">     */</span>
-<span class="source-line-no">193</span><span id="line.193">    public Integer getMaxRow() {</span>
-<span class="source-line-no">194</span><span id="line.194">        return maxRow;</span>
-<span class="source-line-no">195</span><span id="line.195">    }</span>
-<span class="source-line-no">196</span><span id="line.196"></span>
-<span class="source-line-no">197</span><span id="line.197">    /**</span>
-<span class="source-line-no">198</span><span id="line.198">     * グリッド全体のコンストラクトを応答する。</span>
-<span class="source-line-no">199</span><span id="line.199">     */</span>
-<span class="source-line-no">200</span><span id="line.200">    public List&lt;Grid&gt; getGrids() {</span>
-<span class="source-line-no">201</span><span id="line.201">        return grids;</span>
-<span class="source-line-no">202</span><span id="line.202">    }</span>
-<span class="source-line-no">203</span><span id="line.203">}</span>
+<span class="source-line-no">173</span><span id="line.173">    public Boolean isPlacePiece(Player aPlayer,Grid aGrid){</span>
+<span class="source-line-no">174</span><span id="line.174">        Integer color = aPlayer.getPiece().getColor();</span>
+<span class="source-line-no">175</span><span id="line.175">        if(!aGrid.isPlacePiece()) return false;</span>
+<span class="source-line-no">176</span><span id="line.176">        Integer index = 0;</span>
+<span class="source-line-no">177</span><span id="line.177">        for (Grid aNextGrid : aGrid.getNextGrids()) {</span>
+<span class="source-line-no">178</span><span id="line.178">            Integer nextColor = aNextGrid.getPiece().getColor();</span>
+<span class="source-line-no">179</span><span id="line.179">            if (nextColor &gt; 0 &amp;&amp; nextColor != color &amp;&amp; isPlacePieceColumn(color, aNextGrid.getNextGrid(index), index))</span>
+<span class="source-line-no">180</span><span id="line.180">                return true;</span>
+<span class="source-line-no">181</span><span id="line.181">            else</span>
+<span class="source-line-no">182</span><span id="line.182">                index++;</span>
+<span class="source-line-no">183</span><span id="line.183">        }</span>
+<span class="source-line-no">184</span><span id="line.184">        return false;</span>
+<span class="source-line-no">185</span><span id="line.185">    }</span>
+<span class="source-line-no">186</span><span id="line.186"></span>
+<span class="source-line-no">187</span><span id="line.187">    public Boolean isPlacePiece(Player aPlayer,Integer aColumn,Integer aRow){</span>
+<span class="source-line-no">188</span><span id="line.188">        Grid aGrid = this.getGrid(aColumn, aRow);</span>
+<span class="source-line-no">189</span><span id="line.189">        return isPlacePiece(aPlayer, aGrid);</span>
+<span class="source-line-no">190</span><span id="line.190">    }</span>
+<span class="source-line-no">191</span><span id="line.191"></span>
+<span class="source-line-no">192</span><span id="line.192">    public Boolean isPlacePieceColumn(Integer color, Grid aNextGrid, Integer index) {</span>
+<span class="source-line-no">193</span><span id="line.193">        Integer nextColor = aNextGrid.getPiece().getColor();</span>
+<span class="source-line-no">194</span><span id="line.194">        if (nextColor &lt;= 0)</span>
+<span class="source-line-no">195</span><span id="line.195">            return false;</span>
+<span class="source-line-no">196</span><span id="line.196">        if (nextColor == color)</span>
+<span class="source-line-no">197</span><span id="line.197">            return true;</span>
+<span class="source-line-no">198</span><span id="line.198">        return isPlacePieceColumn(color, aNextGrid.getNextGrid(index), index);</span>
+<span class="source-line-no">199</span><span id="line.199">    }</span>
+<span class="source-line-no">200</span><span id="line.200">}</span>
 
 
 

@@ -5,10 +5,8 @@ import java.util.List;
 import java.util.Optional;
 
 public class Computer extends Player {
-
-    public Computer(Table aTable) {
-        super(aTable, "com");
-        return;
+    public Computer(Integer index, Table table) {
+        super(index, "com", table);
     }
 
     public void placePiece() {
@@ -17,45 +15,47 @@ public class Computer extends Player {
         grids.forEach(item -> aList.add(reversiNumber(item)));
         Optional<Integer> max = aList.stream().max(Integer::compareTo);
         Integer index = aList.indexOf(max.get());
-        Grid aGrid = table.getGrid(index);
-        aGrid.setPiece(piece);
+        Grid aGrid = grids.get(index);
+        aGrid.placePiece(piece);
         reversi(aGrid);
         return;
     }
 
     public void reversi(Grid aGrid) {
-        aGrid.getNextGrids().stream().filter(item -> super.reversiNext(item, aGrid.getNextGridIndex(item)))
-                .forEach(item -> item.setPiece(piece));
+        List<Grid> nextGrids = aGrid.getNextGrids();
+        nextGrids.stream().filter(item -> super.reversiNext(item, nextGrids.indexOf(item)))
+                .forEach(item -> item.placePiece(piece));
         return;
     }
 
-    public Boolean isComputer() {
-        return true;
-    }
-
     public Integer reversiNumber(Grid aGrid) {
-        if (!aGrid.isPlacePiece())
+        if (!table.isPlacePiece(this, aGrid))
             return 0;
         List<Integer> aList = new ArrayList<>();
-        aGrid.getNextGrids().stream().filter(item -> this.reversiNext(item, aGrid.getNextGridIndex(item)))
-                .forEach(item -> aList.add(reversiColumnNumber(item, aGrid.getNextGridIndex(item), 0)));
+        List<Grid> nextGrids = aGrid.getNextGrids();
+        nextGrids.stream().filter(item -> this.reversiNext(item, nextGrids.indexOf(item)))
+                .forEach(item -> aList.add(reversiColumnNumber(item, nextGrids.indexOf(item), 0)));
         Integer sum = aList.stream().mapToInt(value -> value).sum();
         return sum;
     }
 
     public Boolean reversiNext(Grid aGrid, Integer index) {
-        Integer aColor = aGrid.getPieceColor();
-        if (aColor > 0 && aColor != this.getColor())
+        Integer color = aGrid.getPiece().getColor();
+        if (color > 0 && color != piece.getColor())
             return true;
         return false;
     }
 
     public Integer reversiColumnNumber(Grid aGrid, Integer index, Integer number) {
-        Integer aGridColor = aGrid.getPieceColor();
+        Integer aGridColor = aGrid.getPiece().getColor();
         if (aGridColor <= 0)
             return 0;
-        if (aGridColor == this.getColor())
+        if (aGridColor == piece.getColor())
             return number;
         return reversiColumnNumber(aGrid.getNextGrid(index), index, number + 1);
+    }
+
+    public Boolean isComputer() {
+        return true;
     }
 }

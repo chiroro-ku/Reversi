@@ -22,62 +22,122 @@
 <span class="source-line-no">009</span><span id="line.9"> */</span>
 <span class="source-line-no">010</span><span id="line.10">public class Controller extends MouseInputAdapter {</span>
 <span class="source-line-no">011</span><span id="line.11"></span>
-<span class="source-line-no">012</span><span id="line.12">        /**</span>
-<span class="source-line-no">013</span><span id="line.13">         * 情報を握っているモデルのインスタンスを束縛する。</span>
-<span class="source-line-no">014</span><span id="line.14">         */</span>
+<span class="source-line-no">012</span><span id="line.12">    /**</span>
+<span class="source-line-no">013</span><span id="line.13">     * 情報を握っているモデルのインスタンスを束縛する。</span>
+<span class="source-line-no">014</span><span id="line.14">     */</span>
 <span class="source-line-no">015</span><span id="line.15">    public Model model;</span>
 <span class="source-line-no">016</span><span id="line.16"></span>
-<span class="source-line-no">017</span><span id="line.17">        /**</span>
-<span class="source-line-no">018</span><span id="line.18">         * 表示を司るビューのインスタンスを束縛する。</span>
-<span class="source-line-no">019</span><span id="line.19">         */</span>
+<span class="source-line-no">017</span><span id="line.17">    /**</span>
+<span class="source-line-no">018</span><span id="line.18">     * 表示を司るビューのインスタンスを束縛する。</span>
+<span class="source-line-no">019</span><span id="line.19">     */</span>
 <span class="source-line-no">020</span><span id="line.20">    public View view;</span>
 <span class="source-line-no">021</span><span id="line.21"></span>
 <span class="source-line-no">022</span><span id="line.22">    /**</span>
-<span class="source-line-no">023</span><span id="line.23">     * コンストラクトである。モデルを設定し、MVC（モデル・ビュー・コントローラ）を構築する。</span>
-<span class="source-line-no">024</span><span id="line.24">     * @param aModel モデルのインスタンス</span>
-<span class="source-line-no">025</span><span id="line.25">     */</span>
-<span class="source-line-no">026</span><span id="line.26">    public Controller(Model aModel) {</span>
-<span class="source-line-no">027</span><span id="line.27">        model = aModel;</span>
-<span class="source-line-no">028</span><span id="line.28">        view = aModel.view;</span>
-<span class="source-line-no">029</span><span id="line.29">        view.controller = this;</span>
-<span class="source-line-no">030</span><span id="line.30">        view.addMouseListener(this);</span>
-<span class="source-line-no">031</span><span id="line.31">        view.addMouseMotionListener(this);</span>
-<span class="source-line-no">032</span><span id="line.32">        view.addMouseWheelListener(this);</span>
-<span class="source-line-no">033</span><span id="line.33">        return;</span>
-<span class="source-line-no">034</span><span id="line.34">    }</span>
-<span class="source-line-no">035</span><span id="line.35"></span>
-<span class="source-line-no">036</span><span id="line.36">    /**</span>
-<span class="source-line-no">037</span><span id="line.37">         * 指定されたマウスイベントからクリックされた位置からグリッドを計算して処理を行う。</span>
-<span class="source-line-no">038</span><span id="line.38">         * @param aMouseEvent マウスイベント</span>
-<span class="source-line-no">039</span><span id="line.39">         */</span>
-<span class="source-line-no">040</span><span id="line.40">    public synchronized void mouseClicked(MouseEvent aMouseEvent) {</span>
-<span class="source-line-no">041</span><span id="line.41">        if(model.getGridSetting()){</span>
-<span class="source-line-no">042</span><span id="line.42">            Point aPoint = aMouseEvent.getPoint();</span>
-<span class="source-line-no">043</span><span id="line.43">            int x = (int) aPoint.getX();</span>
-<span class="source-line-no">044</span><span id="line.44">            int y = (int) aPoint.getY();</span>
-<span class="source-line-no">045</span><span id="line.45">            Table aTable = model.getTable();</span>
-<span class="source-line-no">046</span><span id="line.46">            Integer aTableWidth = view.getTableWidth();</span>
-<span class="source-line-no">047</span><span id="line.47">            Integer aMaxColumn = aTable.getMaxColumn();</span>
-<span class="source-line-no">048</span><span id="line.48">            Integer aGridWidth = aTableWidth / aMaxColumn;</span>
-<span class="source-line-no">049</span><span id="line.49">            Integer aColumn = y / aGridWidth;</span>
-<span class="source-line-no">050</span><span id="line.50">            Integer aRow = x / aGridWidth;</span>
-<span class="source-line-no">051</span><span id="line.51">            model.gridSetting(aColumn, aRow);</span>
-<span class="source-line-no">052</span><span id="line.52">        }</span>
-<span class="source-line-no">053</span><span id="line.53">        else if (model.getPlacePiece()) {</span>
-<span class="source-line-no">054</span><span id="line.54">            Point aPoint = aMouseEvent.getPoint();</span>
-<span class="source-line-no">055</span><span id="line.55">            int x = (int) aPoint.getX();</span>
-<span class="source-line-no">056</span><span id="line.56">            int y = (int) aPoint.getY();</span>
-<span class="source-line-no">057</span><span id="line.57">            Table aTable = model.getTable();</span>
-<span class="source-line-no">058</span><span id="line.58">            Integer aTableWidth = view.getTableWidth();</span>
-<span class="source-line-no">059</span><span id="line.59">            Integer aMaxColumn = aTable.getMaxColumn();</span>
-<span class="source-line-no">060</span><span id="line.60">            Integer aGridWidth = aTableWidth / aMaxColumn;</span>
-<span class="source-line-no">061</span><span id="line.61">            Integer aColumn = y / aGridWidth;</span>
-<span class="source-line-no">062</span><span id="line.62">            Integer aRow = x / aGridWidth;</span>
-<span class="source-line-no">063</span><span id="line.63">            model.placePiece(aColumn, aRow);</span>
-<span class="source-line-no">064</span><span id="line.64">        }</span>
-<span class="source-line-no">065</span><span id="line.65">        return;</span>
-<span class="source-line-no">066</span><span id="line.66">    }</span>
-<span class="source-line-no">067</span><span id="line.67">}</span>
+<span class="source-line-no">023</span><span id="line.23">     * コントローラーのインスタンスである。モデルとビューを設定する。</span>
+<span class="source-line-no">024</span><span id="line.24">     * </span>
+<span class="source-line-no">025</span><span id="line.25">     * @param aModel</span>
+<span class="source-line-no">026</span><span id="line.26">     * @param view</span>
+<span class="source-line-no">027</span><span id="line.27">     */</span>
+<span class="source-line-no">028</span><span id="line.28">    public Controller(Model aModel, View view) {</span>
+<span class="source-line-no">029</span><span id="line.29"></span>
+<span class="source-line-no">030</span><span id="line.30">        // MVCモデルの構築する。</span>
+<span class="source-line-no">031</span><span id="line.31">        this.model = aModel;</span>
+<span class="source-line-no">032</span><span id="line.32">        this.view = view;</span>
+<span class="source-line-no">033</span><span id="line.33"></span>
+<span class="source-line-no">034</span><span id="line.34">        // ビューにコントローラーを設定する。</span>
+<span class="source-line-no">035</span><span id="line.35">        this.view.addMouseListener(this);</span>
+<span class="source-line-no">036</span><span id="line.36">        this.view.addMouseMotionListener(this);</span>
+<span class="source-line-no">037</span><span id="line.37">        this.view.addMouseWheelListener(this);</span>
+<span class="source-line-no">038</span><span id="line.38"></span>
+<span class="source-line-no">039</span><span id="line.39">        return;</span>
+<span class="source-line-no">040</span><span id="line.40">    }</span>
+<span class="source-line-no">041</span><span id="line.41"></span>
+<span class="source-line-no">042</span><span id="line.42">    /**</span>
+<span class="source-line-no">043</span><span id="line.43">     * 指定されたマウスイベントからクリックされた座標からグリッドを計算して処理を行う。</span>
+<span class="source-line-no">044</span><span id="line.44">     * </span>
+<span class="source-line-no">045</span><span id="line.45">     * @param aMouseEvent マウスイベント</span>
+<span class="source-line-no">046</span><span id="line.46">     */</span>
+<span class="source-line-no">047</span><span id="line.47">    public synchronized void mouseClicked(MouseEvent aMouseEvent) {</span>
+<span class="source-line-no">048</span><span id="line.48"></span>
+<span class="source-line-no">049</span><span id="line.49">        // クリックされた座標を取得する。</span>
+<span class="source-line-no">050</span><span id="line.50">        Point aPoint = aMouseEvent.getPoint();</span>
+<span class="source-line-no">051</span><span id="line.51">        int x = (int) aPoint.getX();</span>
+<span class="source-line-no">052</span><span id="line.52">        int y = (int) aPoint.getY();</span>
+<span class="source-line-no">053</span><span id="line.53"></span>
+<span class="source-line-no">054</span><span id="line.54">        // テーブルの幅とグリッドの幅を取得する。</span>
+<span class="source-line-no">055</span><span id="line.55">        Integer aTableWidth = view.getTableWidth();</span>
+<span class="source-line-no">056</span><span id="line.56">        Integer aGridWidth = view.getGridWidth();</span>
+<span class="source-line-no">057</span><span id="line.57"></span>
+<span class="source-line-no">058</span><span id="line.58">        // クリックされたグリッドの行と列を計算する。</span>
+<span class="source-line-no">059</span><span id="line.59">        Integer aColumn = x / aGridWidth;</span>
+<span class="source-line-no">060</span><span id="line.60">        Integer aRow = y / aGridWidth;</span>
+<span class="source-line-no">061</span><span id="line.61"></span>
+<span class="source-line-no">062</span><span id="line.62">        if (model.isSettingTable()) { // テーブルの設定変更。</span>
+<span class="source-line-no">063</span><span id="line.63">            if (x &lt; aTableWidth &amp;&amp; y &lt; aTableWidth) {</span>
+<span class="source-line-no">064</span><span id="line.64"></span>
+<span class="source-line-no">065</span><span id="line.65">                // 新しいテーブルの設定。</span>
+<span class="source-line-no">066</span><span id="line.66">                model.newGameTable();</span>
+<span class="source-line-no">067</span><span id="line.67">                view.updata();</span>
+<span class="source-line-no">068</span><span id="line.68"></span>
+<span class="source-line-no">069</span><span id="line.69">            } else {</span>
+<span class="source-line-no">070</span><span id="line.70"></span>
+<span class="source-line-no">071</span><span id="line.71">                // テーブルの設定を決定する。</span>
+<span class="source-line-no">072</span><span id="line.72">                model.settingTableEnd();</span>
+<span class="source-line-no">073</span><span id="line.73"></span>
+<span class="source-line-no">074</span><span id="line.74">            }</span>
+<span class="source-line-no">075</span><span id="line.75">        } else if (model.isSettingPlayer()) { // プレイヤーの設定変更。</span>
+<span class="source-line-no">076</span><span id="line.76">            if (x &lt; aTableWidth &amp;&amp; y &lt; aTableWidth) {</span>
+<span class="source-line-no">077</span><span id="line.77"></span>
+<span class="source-line-no">078</span><span id="line.78">                // プレイヤーを追加する。</span>
+<span class="source-line-no">079</span><span id="line.79">                model.addPlayer();</span>
+<span class="source-line-no">080</span><span id="line.80"></span>
+<span class="source-line-no">081</span><span id="line.81">            } else {</span>
+<span class="source-line-no">082</span><span id="line.82"></span>
+<span class="source-line-no">083</span><span id="line.83">                // プレイヤーの設定を決定する。</span>
+<span class="source-line-no">084</span><span id="line.84">                model.settingPlayerEnd();</span>
+<span class="source-line-no">085</span><span id="line.85"></span>
+<span class="source-line-no">086</span><span id="line.86">            }</span>
+<span class="source-line-no">087</span><span id="line.87"></span>
+<span class="source-line-no">088</span><span id="line.88">            // 設定の更新</span>
+<span class="source-line-no">089</span><span id="line.89">            view.updata();</span>
+<span class="source-line-no">090</span><span id="line.90"></span>
+<span class="source-line-no">091</span><span id="line.91">        } else if (model.isSettingGrid()) { // グリッドの設定変更</span>
+<span class="source-line-no">092</span><span id="line.92">            if (x &lt; aTableWidth &amp;&amp; y &lt; aTableWidth) {</span>
+<span class="source-line-no">093</span><span id="line.93"></span>
+<span class="source-line-no">094</span><span id="line.94">                // グリッドの初期状態を変更する。</span>
+<span class="source-line-no">095</span><span id="line.95">                model.settingGrid(aColumn, aRow);</span>
+<span class="source-line-no">096</span><span id="line.96">                view.updata();</span>
+<span class="source-line-no">097</span><span id="line.97"></span>
+<span class="source-line-no">098</span><span id="line.98">            } else {</span>
+<span class="source-line-no">099</span><span id="line.99"></span>
+<span class="source-line-no">100</span><span id="line.100">                // グリッドの設定を決定する。</span>
+<span class="source-line-no">101</span><span id="line.101">                model.settingGridEnd();</span>
+<span class="source-line-no">102</span><span id="line.102">                model.gameStart();</span>
+<span class="source-line-no">103</span><span id="line.103"></span>
+<span class="source-line-no">104</span><span id="line.104">            }</span>
+<span class="source-line-no">105</span><span id="line.105">        } else if (model.isPlacePiece()) { // プレイヤーの行動。</span>
+<span class="source-line-no">106</span><span id="line.106"></span>
+<span class="source-line-no">107</span><span id="line.107">            // 駒の配置、パスを実行する。</span>
+<span class="source-line-no">108</span><span id="line.108">            model.placePiece(aColumn, aRow);</span>
+<span class="source-line-no">109</span><span id="line.109"></span>
+<span class="source-line-no">110</span><span id="line.110">            // コンピュータに駒を配置させる。</span>
+<span class="source-line-no">111</span><span id="line.111">            model.computerPlacePiece();</span>
+<span class="source-line-no">112</span><span id="line.112"></span>
+<span class="source-line-no">113</span><span id="line.113">        } else if (model.isGameEnd()) { // ゲームのリスタート。</span>
+<span class="source-line-no">114</span><span id="line.114">            if (x &gt; aTableWidth || y &gt; aTableWidth) {</span>
+<span class="source-line-no">115</span><span id="line.115"></span>
+<span class="source-line-no">116</span><span id="line.116">                // 新しいゲームを設定する。</span>
+<span class="source-line-no">117</span><span id="line.117">                model.restartGame();</span>
+<span class="source-line-no">118</span><span id="line.118">                model.initialize();</span>
+<span class="source-line-no">119</span><span id="line.119">                model.gameSetting();</span>
+<span class="source-line-no">120</span><span id="line.120"></span>
+<span class="source-line-no">121</span><span id="line.121">                // ビューの更新</span>
+<span class="source-line-no">122</span><span id="line.122">                view.updata();</span>
+<span class="source-line-no">123</span><span id="line.123">            }</span>
+<span class="source-line-no">124</span><span id="line.124">        }</span>
+<span class="source-line-no">125</span><span id="line.125">        return;</span>
+<span class="source-line-no">126</span><span id="line.126">    }</span>
+<span class="source-line-no">127</span><span id="line.127">}</span>
 
 
 
