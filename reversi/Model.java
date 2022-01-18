@@ -153,7 +153,9 @@ public class Model extends Object {
         return;
     }
 
-    // テーブルの設定を決定する。
+    /**
+     * テーブルの設定を決定する。
+     */
     public void settingTableEnd() {
         settingTable = false;
         gameSetting();
@@ -273,7 +275,7 @@ public class Model extends Object {
      * 
      * @return ゲームの終了
      */
-    public Boolean Judge() {
+    private Boolean Judge() {
 
         // ゲームの状態を取得する。
         Boolean aBoolean = game.isEnd();
@@ -290,51 +292,6 @@ public class Model extends Object {
         }
 
         return aBoolean;
-    }
-
-    /**
-     * 表示するテキストデータに応答する。
-     * 
-     * @return テキスト
-     */
-    public String getText() {
-        return game.getName() + text;
-    }
-
-    /**
-     * ゲームのインスタンスに応答する。
-     * 
-     * @return ゲームのインスタンス
-     */
-    public Game getGame() {
-        return game;
-    }
-
-    /**
-     * ゲームが束縛しているテーブルのインスタンスに応答する。
-     * 
-     * @return テーブルのインスタンス
-     */
-    public Table getGameTable() {
-        return game.getTable();
-    }
-
-    /**
-     * ゲームが束縛しているプレイヤーのインスタンスに応答する。
-     * 
-     * @return テーブル
-     */
-    public List<Player> getGamePlayers() {
-        return game.getPlayers();
-    }
-
-    /**
-     * テーブルが束縛しているグリッドのリストに応答する。
-     * 
-     * @return プレイヤーのリスト
-     */
-    public List<Grid> getGameTableGrids() {
-        return getGameTable().getGrids();
     }
 
     /**
@@ -380,5 +337,50 @@ public class Model extends Object {
      */
     public Boolean isGameEnd() {
         return gameEnd;
+    }
+
+    /**
+     * 表示するテキストデータに応答する。
+     * 
+     * @return テキスト
+     */
+    public String getText() {
+        return game.getName() + text;
+    }
+
+    /**
+     * ゲームのインスタンスに応答する。
+     * 
+     * @return ゲームのインスタンス
+     */
+    public Game getGame() {
+        return game;
+    }
+
+    /**
+     * ゲームが束縛しているテーブルのインスタンスに応答する。
+     * 
+     * @return テーブルのインスタンス
+     */
+    public Table getGameTable() {
+        return game.getTable();
+    }
+
+    /**
+     * ゲームが束縛しているプレイヤーのインスタンスに応答する。
+     * 
+     * @return テーブル
+     */
+    public List<Player> getGamePlayers() {
+        return game.getPlayers();
+    }
+
+    /**
+     * テーブルが束縛しているグリッドのリストに応答する。
+     * 
+     * @return プレイヤーのリスト
+     */
+    public List<Grid> getGameTableGrids() {
+        return getGameTable().getGrids();
     }
 }

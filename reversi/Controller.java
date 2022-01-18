@@ -22,8 +22,8 @@ public class Controller extends MouseInputAdapter {
     /**
      * コントローラーのインスタンスである。モデルとビューを設定する。
      * 
-     * @param aModel
-     * @param view
+     * @param aModel モデル
+     * @param view ビュー
      */
     public Controller(Model aModel, View view) {
 
@@ -44,6 +44,7 @@ public class Controller extends MouseInputAdapter {
      * 
      * @param aMouseEvent マウスイベント
      */
+    @Override
     public synchronized void mouseClicked(MouseEvent aMouseEvent) {
 
         // クリックされた座標を取得する。

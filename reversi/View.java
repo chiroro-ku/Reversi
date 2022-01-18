@@ -26,7 +26,7 @@ public class View extends JPanel {
 
     /**
      * ビューのインスタンスである。モデルを設定する。
-     * 
+     *
      * @param aModel モデルのインスタンス
      */
     public View(Model aModel) {
@@ -44,7 +44,7 @@ public class View extends JPanel {
     /**
      * ウィンドウの初期化。
      */
-    public void initialize() {
+    private void initialize() {
 
         // ウィンドウを初期化して自身を追加する。
         window.add(this);
@@ -76,9 +76,10 @@ public class View extends JPanel {
 
     /**
      * 指定されたグラフィックスに対して、テーブルとプレイヤーを描画する。
-     * 
+     *
      * @param aGraphics グラフィックスコンテキスト
      */
+    @Override
     public void paintComponent(Graphics aGraphics) {
         Integer gridWidth = getGridWidth();
         List<Grid> grids = model.getGameTableGrids();
@@ -94,12 +95,12 @@ public class View extends JPanel {
 
     /**
      * 指定されたグラフィックスに対して、グリッドを描画する。
-     * 
+     *
      * @param aGraphics グラフィックスコンテキスト
      * @param aGrid     描画するグリッド
      * @param width     グリッドの幅
      */
-    public void paintGrid(Graphics aGraphics, Grid aGrid, Integer width) {
+    private void paintGrid(Graphics aGraphics, Grid aGrid, Integer width) {
 
         // グリッドの行と列を取得する。
         Integer aColumn = aGrid.getColumn();
@@ -127,14 +128,14 @@ public class View extends JPanel {
 
     /**
      * 指定されたグラフィックスに対して、駒を描画する。
-     * 
+     *
      * @param aGraphics グラフィックスコンテキスト
      * @param aPiece    描画する駒
      * @param x         描画するx座標
      * @param y         描画するy座標
      * @param width     駒の幅
      */
-    public void paintPiece(Graphics aGraphics, Piece aPiece, Integer x, Integer y, Integer width) {
+    private void paintPiece(Graphics aGraphics, Piece aPiece, Integer x, Integer y, Integer width) {
 
         // 駒の情報を取得する
         Color color = aPiece.getUIColor();
@@ -156,7 +157,7 @@ public class View extends JPanel {
 
     /**
      * テーブルの幅に応答する。
-     * 
+     *
      * @return テーブルの幅
      */
     public Integer getTableWidth() {
@@ -165,7 +166,7 @@ public class View extends JPanel {
 
     /**
      * テーブルの情報から、グリッドの幅を応答する。
-     * 
+     *
      * @return グリッドの幅
      */
     public Integer getGridWidth() {

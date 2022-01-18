@@ -13,13 +13,21 @@
 <div class="source-container">
 <pre><span class="source-line-no">001</span><span id="line.1">package reversi;</span>
 <span class="source-line-no">002</span><span id="line.2"></span>
-<span class="source-line-no">003</span><span id="line.3">public class Example extends Object{</span>
-<span class="source-line-no">004</span><span id="line.4">    public static void main(String[] args) {</span>
-<span class="source-line-no">005</span><span id="line.5">        Game aGame = new Game("Reversi");</span>
-<span class="source-line-no">006</span><span id="line.6">        Model aModel = new Model(aGame);</span>
-<span class="source-line-no">007</span><span id="line.7">        aModel.gameSetting();</span>
-<span class="source-line-no">008</span><span id="line.8">    }</span>
-<span class="source-line-no">009</span><span id="line.9">}</span>
+<span class="source-line-no">003</span><span id="line.3">/**</span>
+<span class="source-line-no">004</span><span id="line.4"> * メイン：メインクラス。</span>
+<span class="source-line-no">005</span><span id="line.5"> */</span>
+<span class="source-line-no">006</span><span id="line.6">public class Example extends Object{</span>
+<span class="source-line-no">007</span><span id="line.7">    /**</span>
+<span class="source-line-no">008</span><span id="line.8">     * メインクラス。モデルとゲームをインスタンスさせて、ゲームを開始させる。</span>
+<span class="source-line-no">009</span><span id="line.9">     * </span>
+<span class="source-line-no">010</span><span id="line.10">     * @param args 標準入出力</span>
+<span class="source-line-no">011</span><span id="line.11">     */</span>
+<span class="source-line-no">012</span><span id="line.12">    public static void main(String[] args) {</span>
+<span class="source-line-no">013</span><span id="line.13">        Game aGame = new Game("Reversi");</span>
+<span class="source-line-no">014</span><span id="line.14">        Model aModel = new Model(aGame);</span>
+<span class="source-line-no">015</span><span id="line.15">        aModel.gameSetting();</span>
+<span class="source-line-no">016</span><span id="line.16">    }</span>
+<span class="source-line-no">017</span><span id="line.17">}</span>
 
 
 

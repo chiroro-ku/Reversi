@@ -67,9 +67,9 @@ public class Table extends Object {
     /**
      * グリッドのインスタンスを初期化する。
      */
-    public void initialize() {
+    private void initialize() {
         IntStream.range(0, maxColumn * maxRow).forEach(i -> grids.add(new Grid(i, empty, gridColumn(i), gridRow(i))));
-        grids.forEach(item -> item.initialize(nextGrids(item)));
+        grids.forEach(item -> item.setNextGrids(nextGrids(item)));
         return;
     }
 
@@ -90,7 +90,7 @@ public class Table extends Object {
      * @return 行数
      */
     public Integer gridRow(Integer index) {
-        return index / maxRow;
+        return index / maxColumn;
     }
 
     /**
@@ -99,7 +99,7 @@ public class Table extends Object {
      * @param aGrid 中心のグリッド
      * @return グリッドのリスト
      */
-    public List<Grid> nextGrids(Grid aGrid) {
+    private List<Grid> nextGrids(Grid aGrid) {
         List<Grid> aList = new ArrayList<>();
         direction.forEach(item -> aList.add(nextGrid(aGrid, item)));
         return aList;
@@ -112,10 +112,15 @@ public class Table extends Object {
      * @param directionIndex 方向
      * @return 隣のグリッド
      */
-    public Grid nextGrid(Grid aGrid, Integer directionIndex) {
+    private Grid nextGrid(Grid aGrid, Integer directionIndex) {
+
+        // 隣のグリッドのインでくっすを取得する
         Integer index = aGrid.getIndex() + directionIndex;
+
+        // 隣のインデックスが壁か判断する
         if (isWall(aGrid, directionIndex))
             return wall;
+
         return grids.get(index);
     }
 
@@ -126,11 +131,17 @@ public class Table extends Object {
      * @param nextGridIndex 方向
      * @return 壁の是非
      */
-    public Boolean isWall(Grid aGrid, Integer nextGridIndex) {
+    private Boolean isWall(Grid aGrid, Integer nextGridIndex) {
+
+        // 端のグリッドの行と列を計算する
         Integer endGridColumn = maxColumn - 1;
         Integer endGridRow = maxRow - 1;
+
+        // 端のグリッドの行と列を取得する
         Integer column = aGrid.getColumn();
         Integer row = aGrid.getRow();
+
+        // 現在のグリッドと方向から隣に壁があるか判断する
         if (column == 0 && isDirectionLeft(nextGridIndex))
             return true;
         if (column == endGridColumn && isDirectionRight(nextGridIndex))
@@ -139,6 +150,7 @@ public class Table extends Object {
             return true;
         if (row == endGridRow && isDirectionDown(nextGridIndex))
             return true;
+
         return false;
     }
 
@@ -189,8 +201,14 @@ public class Table extends Object {
      * @return 駒の配置の可不可
      */
     public Boolean isPlacePiece(Player aPlayer,Grid aGrid){
-        Integer color = aPlayer.getPiece().getColor();
+
+        // グリッドに既に駒が配置されているか判断する
         if(!aGrid.isPlacePiece()) return false;
+
+        // プレイヤーが掌握している駒の色を取得する
+        Integer color = aPlayer.getPiece().getColor();
+
+        // 駒が配置できるか判断する。
         Integer index = 0;
         for (Grid aNextGrid : aGrid.getNextGrids()) {
             Integer nextColor = aNextGrid.getPiece().getColor();
@@ -199,6 +217,7 @@ public class Table extends Object {
             else
                 index++;
         }
+
         return false;
     }
 
@@ -206,7 +225,8 @@ public class Table extends Object {
      * プレイヤーと列と行から、駒の配置の可不可に応答する。
      * 
      * @param aPlayer プレイヤー
-     * @param aGrid   グリッド
+     * @param aColumn 行
+     * @param aRow 列
      * @return 駒の配置の可不可
      */
     public Boolean isPlacePiece(Player aPlayer,Integer aColumn,Integer aRow){
@@ -217,17 +237,20 @@ public class Table extends Object {
     /**
      * 駒の配置の可不可を列を見て判断する。
      * 
-     * @param color     配置する駒の色
+     * @param color 配置する駒の色
      * @param aNextGrid 隣のグリッド
-     * @param index     インデックス
+     * @param index インデックス
      * @return 駒の配置の可不可
      */
-    public Boolean isPlacePieceColumn(Integer color, Grid aNextGrid, Integer index) {
+    private Boolean isPlacePieceColumn(Integer color, Grid aNextGrid, Integer index) {
         Integer nextColor = aNextGrid.getPiece().getColor();
+
+        // 列に空白があるか自分の駒があるか判断する
         if (nextColor <= 0)
             return false;
         if (nextColor == color)
             return true;
+
         return isPlacePieceColumn(color, aNextGrid.getNextGrid(index), index);
     }
 
@@ -238,7 +261,7 @@ public class Table extends Object {
      * @param aRow    行
      * @return インデックス
      */
-    public Integer gridsIndex(Integer aColumn,Integer aRow){
+    private Integer gridsIndex(Integer aColumn,Integer aRow){
         return (aRow * maxColumn) + aColumn;
     }
 
@@ -265,7 +288,7 @@ public class Table extends Object {
      * 
      * @return インデックス
      */
-    public Integer getDirectionUp() {
+    private Integer getDirectionUp() {
         return -maxColumn;
     }
 
@@ -274,7 +297,7 @@ public class Table extends Object {
      * 
      * @return インデックス
      */
-    public Integer getDirectionDown() {
+    private Integer getDirectionDown() {
         return maxColumn;
     }
 
@@ -283,7 +306,7 @@ public class Table extends Object {
      * 
      * @return インデックス
      */
-    public Integer getDirectionRight() {
+    private Integer getDirectionRight() {
         return 1;
     }
 
@@ -292,7 +315,7 @@ public class Table extends Object {
      * 
      * @return インデックス
      */
-    public Integer getDirectionLeft() {
+    private Integer getDirectionLeft() {
         return -1;
     }
 
@@ -301,7 +324,7 @@ public class Table extends Object {
      * 
      * @return インデックス
      */
-    public Integer getDirectionUpRight() {
+    private Integer getDirectionUpRight() {
         return getDirectionUp() + getDirectionRight();
     }
 
@@ -310,7 +333,7 @@ public class Table extends Object {
      * 
      * @return インデックス
      */
-    public Integer getDirectionUpLeft() {
+    private Integer getDirectionUpLeft() {
         return getDirectionUp() + getDirectionLeft();
     }
 
@@ -319,7 +342,7 @@ public class Table extends Object {
      * 
      * @return インデックス
      */
-    public Integer getDirectionDownRight() {
+    private Integer getDirectionDownRight() {
         return getDirectionDown() + getDirectionRight();
     }
 
@@ -328,7 +351,7 @@ public class Table extends Object {
      * 
      * @return インデックス
      */
-    public Integer getDirectionDownLeft() {
+    private Integer getDirectionDownLeft() {
         return getDirectionDown() + getDirectionLeft();
     }
 
@@ -338,7 +361,7 @@ public class Table extends Object {
      * @param index インデックス
      * @return 方向の是非
      */
-    public Boolean isDirectionUp(Integer index) {
+    private Boolean isDirectionUp(Integer index) {
         if (index == getDirectionUp())
             return true;
         if (index == getDirectionUpRight())
@@ -354,7 +377,7 @@ public class Table extends Object {
      * @param index インデックス
      * @return 方向の是非
      */
-    public Boolean isDirectionRight(Integer index) {
+    private Boolean isDirectionRight(Integer index) {
         if (index == getDirectionRight())
             return true;
         if (index == getDirectionUpRight())
@@ -370,7 +393,7 @@ public class Table extends Object {
      * @param index インデックス
      * @return 方向の是非
      */
-    public Boolean isDirectionDown(Integer index) {
+    private Boolean isDirectionDown(Integer index) {
         if (index == getDirectionDown())
             return true;
         if (index == getDirectionDownRight())
@@ -386,7 +409,7 @@ public class Table extends Object {
      * @param index インデックス
      * @return 方向の是非
      */
-    public Boolean isDirectionLeft(Integer index) {
+    private Boolean isDirectionLeft(Integer index) {
         if (index == getDirectionLeft())
             return true;
         if (index == getDirectionUpLeft())

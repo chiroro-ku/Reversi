@@ -1,6 +1,20 @@
 # Reversi
-## 「自由型リバーシ」
-わたしのかんがえたさいきょうのリバーシ
+
+# 開発環境
+開発言語：Java言語  
+使用ツール：Visual Studio Coode
+形式：アプリケーション  
+
+# 目的
+・新しいオセロシステムの開発  
+・ツールゲームの開発    
+・Java言語の学習と、ソフトウェア開発の実践
+
+# （設計）
+
+
+## 「自由型リバーシ」（仮名）
+https://github.com/chiroro-ku/Free-Reversi
 
 ## 起動方法
 Reversi.appの実行。
