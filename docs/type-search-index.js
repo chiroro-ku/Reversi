@@ -1,0 +1,1 @@
+typeSearchIndex = [{"p":"reversi","l":"Computer"},{"p":"reversi","l":"Controller"},{"p":"reversi","l":"Example"},{"p":"reversi","l":"Game"},{"p":"reversi","l":"Grid"},{"p":"reversi","l":"Model"},{"p":"reversi","l":"Piece"},{"p":"reversi","l":"Player"},{"p":"reversi","l":"Table"},{"p":"reversi","l":"View"},{"l":"すべてのクラス","u":"allclasses-index.html"}];updateSearchResults();
