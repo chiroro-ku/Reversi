@@ -5,7 +5,7 @@
     <property name="package" value="reversi" />
     <property name="destdir" value="./Classes"/>
 	<property name="instdir" value="./Reversi.app/Contents/Resources/Java" />
-	<property name="docdir" value="./docs" />
+	<property name="docdir" value="./JavaDoc" />
 	<property name="packagenames" value="${package}" />
 
     <target name="all" depends="jar" description="build all">
