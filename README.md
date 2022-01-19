@@ -1,10 +1,10 @@
 # Reversi
 
-### Webアプリケーションバージョン
+### Webアプリケーション版
 URL:https://free-reversi-app.herokuapp.com/  
 サーブレット/JSPを勉強しながら開発中です。  
 Web版での開発環境や、詳細はGitに載せています。  
-現在8×8以外のテーブルでゲームをすると、バグが発生します。
+現在、8×8以外のテーブルでゲームをすると、バグが発生します。
 Github:https://github.com/chiroro-ku/Free-Reversi  
 
 # アプリ名：Non-Reversi
