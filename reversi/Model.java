@@ -222,13 +222,13 @@ public class Model extends Object {
         } else {
 
             // 駒を配置する。
-            game.placePiece(aColumn, aRow);
+            game.playerPlacePiece(aColumn, aRow);
 
             // ビューを更新する。
             view.updata();
 
             // ゲームの状況を更新する
-            Judge();
+            judge();
         }
 
         return;
@@ -251,7 +251,7 @@ public class Model extends Object {
             // ビューを更新する。
             view.updata();
 
-            if (Judge()) // ゲームの状況を更新する。
+            if (judge()) // ゲームの状況を更新する。
                 return; // ゲームが終了した時、プログラムを抜ける。
         }
 
@@ -275,7 +275,7 @@ public class Model extends Object {
      * 
      * @return ゲームの終了
      */
-    private Boolean Judge() {
+    private Boolean judge() {
 
         // ゲームの状態を取得する。
         Boolean aBoolean = game.isEnd();

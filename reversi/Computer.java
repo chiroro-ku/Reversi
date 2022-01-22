@@ -24,6 +24,15 @@ public class Computer extends Player {
      */
     public void placePiece() {
 
+        // 駒の配置
+        Grid aGrid = preload();
+        aGrid.placePiece(piece);
+        super.reversi(aGrid);
+        return;
+    }
+
+    private Grid preload(){
+
         // 反転できる駒の数のリスト
         List<Integer> aList = new ArrayList<>();
 
@@ -36,10 +45,7 @@ public class Computer extends Player {
         Integer index = aList.indexOf(max.get());
         Grid aGrid = grids.get(index);
 
-        // 駒の配置
-        aGrid.placePiece(piece);
-        super.reversi(aGrid);
-        return;
+        return aGrid;
     }
 
     /**

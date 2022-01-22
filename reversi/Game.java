@@ -88,7 +88,7 @@ public class Game extends Object {
      * @param aColumn 駒を配置する行
      * @param aRow    駒を配置する列
      */
-    public void placePiece(Integer aColumn, Integer aRow) {
+    public void playerPlacePiece(Integer aColumn, Integer aRow) {
 
         Player aPlayer = getCurrentPlayer();
 
