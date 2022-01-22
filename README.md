@@ -17,7 +17,14 @@ Github:https://github.com/chiroro-ku/Free-Reversi
 ![サンプル1](images/9.png)
 ![サンプル2](images/2.png)
 
-## 魅力
+# 目次
+1. [魅力](#anchor1)
+2. [開発・設計](#anchor2)
+3. [工夫点・改善点](#anchor3)
+4. [説明](#anchor4)
+
+<a id="anchor1"></a>
+# 魅力
 現時点では、このアプリケーションは「面白く無い」と思っています。  
 原因は、UIが悪く使いにくい点と、コンピュータが弱い事があると考えています。  
 しかし、「リバーシ」が本来持つ面白さや、美しさを向上させることは、できたと思います。  
@@ -26,12 +33,15 @@ Github:https://github.com/chiroro-ku/Free-Reversi
 ![サンプル3](images/5.png)
 ![サンプル4](images/8.png)
 
+<a id="anchor2"></a>
+# 開発・設計
+
 ## 開発環境
 開発言語：Java言語  
 使用ツール：Visual Studio Coode  
 形式：アプリケーション
 
-# 開発目的
+## 開発目的
 - 新しいオセロシステムの開発   
 - Java言語の学習  
 - ソフトウェア開発の実践
@@ -42,6 +52,9 @@ Github:https://github.com/chiroro-ku/Free-Reversi
 
 ## クラス図
 ![クラス図](images/class.png)
+
+<a id="anchor3"></a>
+# 工夫点・改善点
 
 ## 工夫した点
 ソースを作成するだけだでく、実践的なソフトウェア開発を目指したことです。    
@@ -79,7 +92,8 @@ Github:https://github.com/chiroro-ku/Free-Reversi
 感想としては、コーディング以外の作業も極めたいと思いました。  
 また、一からソフトウェアを開発することで、高い達成感と、自分の能力が大きく成長した感覚を得ることができました。  
 
-# アプリケーション説明
+<a id="anchor4"></a>
+# 説明
 
 ## 起動方法
 Reversi.appの実行。
