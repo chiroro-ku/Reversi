@@ -192,7 +192,7 @@ public class Model extends Object {
     public void gameStart() {
 
         // ゲームの準備して、ビューを更新する。
-        game.prepare();
+        // game.prepare();
         view.updata();
 
         // コンピュータの初手を実行する。
